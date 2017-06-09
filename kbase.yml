@@ -1,0 +1,15 @@
+module-name:
+    kb_picaxe
+
+module-description:
+    A KBase module
+
+service-language:
+    perl
+
+module-version:
+    0.0.1
+
+owners:
+    [janakakbase]
+

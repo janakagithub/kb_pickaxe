@@ -1,0 +1,91 @@
+{
+    "ver": "0.0.1",
+    "authors": [
+        "janaka"
+    ],
+    "contact": "janakaed@anl.gov",
+    "visible": true,
+    "categories": ["active"],
+    "widgets": {
+        "input": null,
+        "output": "kbaseGenomeView"
+    },
+    "parameters": [
+        {
+            "id": "model_id",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ "KBaseFBA.FBAModel" ]
+            }
+        },
+        {
+            "id": "compounds",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": true,
+            "default_values": [ "cpd000027_c0" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types" : [ ]
+            }
+        },
+        {
+            "id" : "out_model_id",
+            "optional" : false,
+            "advanced" : false,
+            "allow_multiple" : false,
+            "default_values" : [ "" ],
+            "field_type" : "text",
+            "text_options" : {
+            "valid_ws_types" : [ "KBaseFBA.FBAModel" ],
+            "is_output_name":true
+            }
+         }
+
+    ],
+    "behavior": {
+        "service-mapping": {
+            "url": "",
+            "name": "kb_picaxe",
+            "method": "runpicaxe",
+            "input_mapping": [
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace"
+                },
+                {
+                    "input_parameter": "model_id",
+                    "target_property": "model_id"
+                },
+                {
+                    "input_parameter": "compounds",
+                    "target_property": "compounds"
+                },
+
+                {
+                    "input_parameter": "out_model_id",
+                    "target_property": "out_model_id"
+                }
+            ],
+            "output_mapping": [
+                {
+                  "constant_value": "KBaseFBA.FBAModel",
+                  "target_property": "type"
+                },
+                {
+                  "input_parameter": "out_model_id",
+                  "target_property": "id"
+                },
+                {
+                  "narrative_system_variable": "workspace",
+                  "target_property": "ws"
+                }
+              ]
+        }
+    },
+    "job_id_output_field": "docker"
+}

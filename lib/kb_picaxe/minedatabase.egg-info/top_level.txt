@@ -1,0 +1,2 @@
+/kb/module/lib/picaxe/minedatabase
+/kb/module/lib/picaxe/minedatabase/NP_Score

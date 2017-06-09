@@ -1,0 +1,12 @@
+setup.py
+minedatabase/__init__.py
+minedatabase/compound_io.py
+minedatabase/databases.py
+minedatabase/pickaxe.py
+minedatabase/queries.py
+minedatabase/utils.py
+minedatabase.egg-info/PKG-INFO
+minedatabase.egg-info/SOURCES.txt
+minedatabase.egg-info/dependency_links.txt
+minedatabase.egg-info/requires.txt
+minedatabase.egg-info/top_level.txt
