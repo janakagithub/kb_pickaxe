@@ -270,64 +270,6 @@ sub runpicaxe
     my $ffuRef = $ffu->tsv_file_to_model($tsvToModel);
 
     print &Dumper ($ffuRef);
-    #die;
-
-=head
-
-    my $Incpd;
-    my $cpdList = [];
-    my $count =0;
-    my $editModelOut;
-    while (my $input = <$fhr>){
-        chomp $input;
-        my @cArr = split /\t/, $input;
-
-        my $eachcpd;
-        if (defined $cpdStHash->{$cArr[0]}){
-            $eachcpd = {
-                add_compound_id => $cArr[0],
-                add_compartment_id => ["c0"],
-                add_compound_name => $cpdStHash->{$cArr[0]}->[3],
-                add_compound_charge => 0,
-                add_compound_formula => $cpdStHash->{$cArr[0]}->[2]
-            };
-        }
-        else {
-
-            $eachcpd = {
-                add_compound_id => $cArr[0],
-                add_compartment_id => ["c0"],
-                add_compound_name => "undefined",
-                add_compound_charge => 0,
-                add_compound_formula => ""
-            };
-        }
-
-        push ($cpdList, $eachcpd);
-        if ($count > 5000){
-
-
-            my $modelEdit = {
-                workspace => "janakakbase:narrative_1495258241399",
-                fbamodel_id => "BsubModel",
-                fbamodel_output_id => "editedBsubModel",
-                compounds_to_add => $cpdList,
-                reactions_to_add => []
-
-            };
-
-            $count = 0;
-            $cpdList = [];
-            my $editModelOut = $fbaO->edit_metabolic_model($modelEdit);
-        }
-
-        $count++;
-        #print "$cArr[0]\n";
-    }
-
-    print &Dumper ($editModelOut);
-
-=cut
 
     my $returnVar = {
         model_ref => $ffuRef->{ref}
