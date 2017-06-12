@@ -36,7 +36,7 @@ This module contains the implementation for the primary methods in KBase for met
 sub new
 {
     my($class, $url, @args) = @_;
-
+    
 
     my $self = {
 	client => fba_tools::fba_toolsClient::RpcClient->new,
@@ -101,25 +101,24 @@ sub new
     # We create an auth token, passing through the arguments that we were (hopefully) given.
 
     {
-	my $token = Bio::KBase::AuthToken->new(@args);
-
-	if (!$token->error_message)
-	{
-	    $self->{token} = $token->token;
-	    $self->{client}->{token} = $token->token;
+	my %arg_hash2 = @args;
+	if (exists $arg_hash2{"token"}) {
+	    $self->{token} = $arg_hash2{"token"};
+	} elsif (exists $arg_hash2{"user_id"}) {
+	    my $token = Bio::KBase::AuthToken->new(@args);
+	    if (!$token->error_message) {
+	        $self->{token} = $token->token;
+	    }
 	}
-        else
-        {
-	    #
-	    # All methods in this module require authentication. In this case, if we
-	    # don't have a token, we can't continue.
-	    #
-	    die "Authentication failed: " . $token->error_message;
+	
+	if (exists $self->{token})
+	{
+	    $self->{client}->{token} = $self->{token};
 	}
     }
 
-    my $ua = $self->{client}->ua;
-    my $timeout = $ENV{CDMI_TIMEOUT} || (30 * 60);
+    my $ua = $self->{client}->ua;	 
+    my $timeout = $ENV{CDMI_TIMEOUT} || (30 * 60);	 
     $ua->timeout($timeout);
     bless $self, $class;
     #    $self->_validate_version();
@@ -342,7 +341,184 @@ sub _build_metabolic_model_submit {
     }
 }
 
+ 
 
+
+=head2 build_multiple_metabolic_models
+
+  $return = $obj->build_multiple_metabolic_models($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a fba_tools.BuildMultipleMetabolicModelsParams
+$return is a fba_tools.BuildMultipleMetabolicModelsResults
+BuildMultipleMetabolicModelsParams is a reference to a hash where the following keys are defined:
+	genome_ids has a value which is a reference to a list where each element is a fba_tools.genome_id
+	genome_text has a value which is a string
+	genome_workspace has a value which is a fba_tools.workspace_name
+	media_id has a value which is a fba_tools.media_id
+	media_workspace has a value which is a fba_tools.workspace_name
+	fbamodel_output_id has a value which is a fba_tools.fbamodel_id
+	workspace has a value which is a fba_tools.workspace_name
+	template_id has a value which is a fba_tools.template_id
+	template_workspace has a value which is a fba_tools.workspace_name
+	coremodel has a value which is a fba_tools.bool
+	gapfill_model has a value which is a fba_tools.bool
+	thermodynamic_constraints has a value which is a fba_tools.bool
+	comprehensive_gapfill has a value which is a fba_tools.bool
+	custom_bound_list has a value which is a reference to a list where each element is a string
+	media_supplement_list has a value which is a reference to a list where each element is a fba_tools.compound_id
+	expseries_id has a value which is a fba_tools.expseries_id
+	expseries_workspace has a value which is a fba_tools.workspace_name
+	expression_condition has a value which is a string
+	exp_threshold_percentile has a value which is a float
+	exp_threshold_margin has a value which is a float
+	activation_coefficient has a value which is a float
+	omega has a value which is a float
+	objective_fraction has a value which is a float
+	minimum_target_flux has a value which is a float
+	number_of_solutions has a value which is an int
+genome_id is a string
+workspace_name is a string
+media_id is a string
+fbamodel_id is a string
+template_id is a string
+bool is an int
+compound_id is a string
+expseries_id is a string
+BuildMultipleMetabolicModelsResults is a reference to a hash where the following keys are defined:
+	new_fbamodel_ref has a value which is a fba_tools.ws_fbamodel_id
+	new_fba_ref has a value which is a fba_tools.ws_fba_id
+ws_fbamodel_id is a string
+ws_fba_id is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a fba_tools.BuildMultipleMetabolicModelsParams
+$return is a fba_tools.BuildMultipleMetabolicModelsResults
+BuildMultipleMetabolicModelsParams is a reference to a hash where the following keys are defined:
+	genome_ids has a value which is a reference to a list where each element is a fba_tools.genome_id
+	genome_text has a value which is a string
+	genome_workspace has a value which is a fba_tools.workspace_name
+	media_id has a value which is a fba_tools.media_id
+	media_workspace has a value which is a fba_tools.workspace_name
+	fbamodel_output_id has a value which is a fba_tools.fbamodel_id
+	workspace has a value which is a fba_tools.workspace_name
+	template_id has a value which is a fba_tools.template_id
+	template_workspace has a value which is a fba_tools.workspace_name
+	coremodel has a value which is a fba_tools.bool
+	gapfill_model has a value which is a fba_tools.bool
+	thermodynamic_constraints has a value which is a fba_tools.bool
+	comprehensive_gapfill has a value which is a fba_tools.bool
+	custom_bound_list has a value which is a reference to a list where each element is a string
+	media_supplement_list has a value which is a reference to a list where each element is a fba_tools.compound_id
+	expseries_id has a value which is a fba_tools.expseries_id
+	expseries_workspace has a value which is a fba_tools.workspace_name
+	expression_condition has a value which is a string
+	exp_threshold_percentile has a value which is a float
+	exp_threshold_margin has a value which is a float
+	activation_coefficient has a value which is a float
+	omega has a value which is a float
+	objective_fraction has a value which is a float
+	minimum_target_flux has a value which is a float
+	number_of_solutions has a value which is an int
+genome_id is a string
+workspace_name is a string
+media_id is a string
+fbamodel_id is a string
+template_id is a string
+bool is an int
+compound_id is a string
+expseries_id is a string
+BuildMultipleMetabolicModelsResults is a reference to a hash where the following keys are defined:
+	new_fbamodel_ref has a value which is a fba_tools.ws_fbamodel_id
+	new_fba_ref has a value which is a fba_tools.ws_fba_id
+ws_fbamodel_id is a string
+ws_fba_id is a string
+
+
+=end text
+
+=item Description
+
+Build multiple genome-scale metabolic models based on annotations in an input genome typed object
+
+=back
+
+=cut
+
+sub build_multiple_metabolic_models
+{
+    my($self, @args) = @_;
+    my $job_id = $self->_build_multiple_metabolic_models_submit(@args);
+    my $async_job_check_time = $self->{async_job_check_time};
+    while (1) {
+        Time::HiRes::sleep($async_job_check_time);
+        $async_job_check_time *= $self->{async_job_check_time_scale_percent} / 100.0;
+        if ($async_job_check_time > $self->{async_job_check_max_time}) {
+            $async_job_check_time = $self->{async_job_check_max_time};
+        }
+        my $job_state_ref = $self->_check_job($job_id);
+        if ($job_state_ref->{"finished"} != 0) {
+            if (!exists $job_state_ref->{"result"}) {
+                $job_state_ref->{"result"} = [];
+            }
+            return wantarray ? @{$job_state_ref->{"result"}} : $job_state_ref->{"result"}->[0];
+        }
+    }
+}
+
+sub _build_multiple_metabolic_models_submit {
+    my($self, @args) = @_;
+# Authentication: required
+    if ((my $n = @args) != 1) {
+        Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+                                   "Invalid argument count for function _build_multiple_metabolic_models_submit (received $n, expecting 1)");
+    }
+    {
+        my($params) = @args;
+        my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+            my $msg = "Invalid arguments passed to _build_multiple_metabolic_models_submit:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+            Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+                                   method_name => '_build_multiple_metabolic_models_submit');
+        }
+    }
+    my $context = undef;
+    if ($self->{service_version}) {
+        $context = {'service_ver' => $self->{service_version}};
+    }
+    my $result = $self->{client}->call($self->{url}, $self->{headers}, {
+        method => "fba_tools._build_multiple_metabolic_models_submit",
+        params => \@args, context => $context});
+    if ($result) {
+        if ($result->is_error) {
+            Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+                           code => $result->content->{error}->{code},
+                           method_name => '_build_multiple_metabolic_models_submit',
+                           data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+            );
+        } else {
+            return $result->result->[0];  # job_id
+        }
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method _build_multiple_metabolic_models_submit",
+                        status_line => $self->{client}->status_line,
+                        method_name => '_build_multiple_metabolic_models_submit');
+    }
+}
+
+ 
 
 
 =head2 gapfill_metabolic_model
@@ -523,7 +699,7 @@ sub _gapfill_metabolic_model_submit {
     }
 }
 
-
+ 
 
 
 =head2 run_flux_balance_analysis
@@ -716,7 +892,7 @@ sub _run_flux_balance_analysis_submit {
     }
 }
 
-
+ 
 
 
 =head2 compare_fba_solutions
@@ -837,7 +1013,7 @@ sub _compare_fba_solutions_submit {
     }
 }
 
-
+ 
 
 
 =head2 propagate_model_to_new_genome
@@ -1014,7 +1190,7 @@ sub _propagate_model_to_new_genome_submit {
     }
 }
 
-
+ 
 
 
 =head2 simulate_growth_on_phenotype_data
@@ -1159,7 +1335,7 @@ sub _simulate_growth_on_phenotype_data_submit {
     }
 }
 
-
+ 
 
 
 =head2 merge_metabolic_models_into_community_model
@@ -1282,7 +1458,7 @@ sub _merge_metabolic_models_into_community_model_submit {
     }
 }
 
-
+ 
 
 
 =head2 compare_flux_with_expression
@@ -1419,7 +1595,7 @@ sub _compare_flux_with_expression_submit {
     }
 }
 
-
+ 
 
 
 =head2 check_model_mass_balance
@@ -1536,7 +1712,7 @@ sub _check_model_mass_balance_submit {
     }
 }
 
-
+ 
 
 
 =head2 compare_models
@@ -1665,7 +1841,7 @@ sub _compare_models_submit {
     }
 }
 
-
+ 
 
 
 =head2 edit_metabolic_model
@@ -1790,7 +1966,7 @@ sub _edit_metabolic_model_submit {
     }
 }
 
-
+ 
 
 
 =head2 edit_media
@@ -1941,7 +2117,7 @@ sub _edit_media_submit {
     }
 }
 
-
+ 
 
 
 =head2 excel_file_to_model
@@ -2064,7 +2240,7 @@ sub _excel_file_to_model_submit {
     }
 }
 
-
+ 
 
 
 =head2 sbml_file_to_model
@@ -2187,7 +2363,7 @@ sub _sbml_file_to_model_submit {
     }
 }
 
-
+ 
 
 
 =head2 tsv_file_to_model
@@ -2310,7 +2486,7 @@ sub _tsv_file_to_model_submit {
     }
 }
 
-
+ 
 
 
 =head2 model_to_excel_file
@@ -2425,7 +2601,7 @@ sub _model_to_excel_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 model_to_sbml_file
@@ -2540,7 +2716,7 @@ sub _model_to_sbml_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 model_to_tsv_file
@@ -2661,7 +2837,7 @@ sub _model_to_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_model_as_excel_file
@@ -2768,7 +2944,7 @@ sub _export_model_as_excel_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_model_as_tsv_file
@@ -2875,7 +3051,7 @@ sub _export_model_as_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_model_as_sbml_file
@@ -2982,7 +3158,7 @@ sub _export_model_as_sbml_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 fba_to_excel_file
@@ -3097,7 +3273,7 @@ sub _fba_to_excel_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 fba_to_tsv_file
@@ -3218,7 +3394,7 @@ sub _fba_to_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_fba_as_excel_file
@@ -3325,7 +3501,7 @@ sub _export_fba_as_excel_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_fba_as_tsv_file
@@ -3432,7 +3608,7 @@ sub _export_fba_as_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 tsv_file_to_media
@@ -3549,7 +3725,7 @@ sub _tsv_file_to_media_submit {
     }
 }
 
-
+ 
 
 
 =head2 excel_file_to_media
@@ -3666,7 +3842,7 @@ sub _excel_file_to_media_submit {
     }
 }
 
-
+ 
 
 
 =head2 media_to_tsv_file
@@ -3781,7 +3957,7 @@ sub _media_to_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 media_to_excel_file
@@ -3896,7 +4072,7 @@ sub _media_to_excel_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_media_as_excel_file
@@ -4003,7 +4179,7 @@ sub _export_media_as_excel_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_media_as_tsv_file
@@ -4110,7 +4286,7 @@ sub _export_media_as_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 tsv_file_to_phenotype_set
@@ -4229,7 +4405,7 @@ sub _tsv_file_to_phenotype_set_submit {
     }
 }
 
-
+ 
 
 
 =head2 phenotype_set_to_tsv_file
@@ -4344,7 +4520,7 @@ sub _phenotype_set_to_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_phenotype_set_as_tsv_file
@@ -4451,7 +4627,7 @@ sub _export_phenotype_set_as_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 phenotype_simulation_set_to_excel_file
@@ -4566,7 +4742,7 @@ sub _phenotype_simulation_set_to_excel_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 phenotype_simulation_set_to_tsv_file
@@ -4681,7 +4857,7 @@ sub _phenotype_simulation_set_to_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_phenotype_simulation_set_as_excel_file
@@ -4788,7 +4964,7 @@ sub _export_phenotype_simulation_set_as_excel_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 export_phenotype_simulation_set_as_tsv_file
@@ -4895,7 +5071,7 @@ sub _export_phenotype_simulation_set_as_tsv_file_submit {
     }
 }
 
-
+ 
 
 
 =head2 bulk_export_objects
@@ -5030,8 +5206,8 @@ sub _bulk_export_objects_submit {
     }
 }
 
-
-
+ 
+ 
 sub status
 {
     my($self, @args) = @_;
@@ -5078,7 +5254,7 @@ sub status
         }
     }
 }
-
+   
 
 sub version {
     my ($self) = @_;
@@ -5993,6 +6169,116 @@ new_fbamodel_ref has a value which is a fba_tools.ws_fbamodel_id
 new_fba_ref has a value which is a fba_tools.ws_fba_id
 number_gapfilled_reactions has a value which is an int
 number_removed_biomass_compounds has a value which is an int
+
+
+=end text
+
+=back
+
+
+
+=head2 BuildMultipleMetabolicModelsParams
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+genome_ids has a value which is a reference to a list where each element is a fba_tools.genome_id
+genome_text has a value which is a string
+genome_workspace has a value which is a fba_tools.workspace_name
+media_id has a value which is a fba_tools.media_id
+media_workspace has a value which is a fba_tools.workspace_name
+fbamodel_output_id has a value which is a fba_tools.fbamodel_id
+workspace has a value which is a fba_tools.workspace_name
+template_id has a value which is a fba_tools.template_id
+template_workspace has a value which is a fba_tools.workspace_name
+coremodel has a value which is a fba_tools.bool
+gapfill_model has a value which is a fba_tools.bool
+thermodynamic_constraints has a value which is a fba_tools.bool
+comprehensive_gapfill has a value which is a fba_tools.bool
+custom_bound_list has a value which is a reference to a list where each element is a string
+media_supplement_list has a value which is a reference to a list where each element is a fba_tools.compound_id
+expseries_id has a value which is a fba_tools.expseries_id
+expseries_workspace has a value which is a fba_tools.workspace_name
+expression_condition has a value which is a string
+exp_threshold_percentile has a value which is a float
+exp_threshold_margin has a value which is a float
+activation_coefficient has a value which is a float
+omega has a value which is a float
+objective_fraction has a value which is a float
+minimum_target_flux has a value which is a float
+number_of_solutions has a value which is an int
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+genome_ids has a value which is a reference to a list where each element is a fba_tools.genome_id
+genome_text has a value which is a string
+genome_workspace has a value which is a fba_tools.workspace_name
+media_id has a value which is a fba_tools.media_id
+media_workspace has a value which is a fba_tools.workspace_name
+fbamodel_output_id has a value which is a fba_tools.fbamodel_id
+workspace has a value which is a fba_tools.workspace_name
+template_id has a value which is a fba_tools.template_id
+template_workspace has a value which is a fba_tools.workspace_name
+coremodel has a value which is a fba_tools.bool
+gapfill_model has a value which is a fba_tools.bool
+thermodynamic_constraints has a value which is a fba_tools.bool
+comprehensive_gapfill has a value which is a fba_tools.bool
+custom_bound_list has a value which is a reference to a list where each element is a string
+media_supplement_list has a value which is a reference to a list where each element is a fba_tools.compound_id
+expseries_id has a value which is a fba_tools.expseries_id
+expseries_workspace has a value which is a fba_tools.workspace_name
+expression_condition has a value which is a string
+exp_threshold_percentile has a value which is a float
+exp_threshold_margin has a value which is a float
+activation_coefficient has a value which is a float
+omega has a value which is a float
+objective_fraction has a value which is a float
+minimum_target_flux has a value which is a float
+number_of_solutions has a value which is an int
+
+
+=end text
+
+=back
+
+
+
+=head2 BuildMultipleMetabolicModelsResults
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+new_fbamodel_ref has a value which is a fba_tools.ws_fbamodel_id
+new_fba_ref has a value which is a fba_tools.ws_fba_id
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+new_fbamodel_ref has a value which is a fba_tools.ws_fbamodel_id
+new_fba_ref has a value which is a fba_tools.ws_fba_id
 
 
 =end text

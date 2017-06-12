@@ -3,9 +3,9 @@ use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
 # http://semver.org
-our $VERSION = '0.0.1';
-our $GIT_URL = '';
-our $GIT_COMMIT_HASH = '';
+our $VERSION = '1.1.0';
+our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
+our $GIT_COMMIT_HASH = '48f97e5a2fc2ef4d6e057dfd7f45551ac1364316';
 
 =head1 NAME
 
@@ -20,7 +20,8 @@ This method wraps the PicAxe tool.
 
 #BEGIN_HEADER
 use Bio::KBase::AuthToken;
-use Bio::KBase::workspace::Client;
+#use Bio::KBase::workspace::Client;
+use Workspace::WorkspaceClient;
 use Config::IniFiles;
 use Data::Dumper;
 use JSON;
@@ -141,17 +142,19 @@ sub runpicaxe
     my $ctx = $kb_picaxe::kb_picaxeServer::CallContext;
     my($return);
     #BEGIN runpicaxe
-    my $fbaO = new fba_tools::fba_toolsClient( $self->{'callbackURL'},
-                                                            ( 'service_version' => 'release',
-                                                              'async_version' => 'release',
-                                                            )
-                                                          );
 
+    my $fbaO = new fba_tools::fba_toolsClient( $self->{'callbackURL'},
+                                                            ( 'service_version' => 'dev',
+                                                              'async_version' => 'dev',
+                                                            )
+                                                           );
+=head
     my $ffu = new FBAFileUtil::FBAFileUtilClient( $self->{'callbackURL'},
-                                                            ( 'service_version' => 'release',
-                                                              'async_version' => 'release',
+                                                            ( 'service_version' => 'dev',
+                                                              'async_version' => 'dev',
                                                             )
                                                           );
+=cut
 
     my $Cjson;
     {
@@ -176,13 +179,24 @@ sub runpicaxe
     }
 
     my $token=$ctx->token;
-    my $wshandle=Bio::KBase::workspace::Client->new($self->{'workspace-url'},token=>$token);
+    #my $wshandle=Bio::KBase::workspace::Client->new($self->{'workspace-url'},token=>$token);
+    my $wshandle=Workspace::WorkspaceClient->new($self->{'workspace-url'},token=>$token);
 
     open my $cpdListOut, ">", "/kb/module/work/tmp/inputModel.tsv"  or die "Couldn't open inputModel file $!\n";;;
     print $cpdListOut "id\tabbreviation\tname\tformula\tmass\tsource\tstructure\tcharge is_core\tis_obsolete\tlinked_compound\tis_cofactor\tdeltag\tdeltagerr\tpka\tpkb\tabstract_compound\tcomprised_of\taliases\n";
 
+
+    print "loading model $params->{model_id}\n";
+
     #print "id\tabbreviation\tname\tformula\tmass\tsource\tstructure\tcharge is_core\tis_obsolete\tlinked_compound\tis_cofactor\tdeltag\tdeltagerr\tpka\tpkb\tabstract_compound\tcomprised_of\taliases\n";
-    my $inputModel = $wshandle->get_objects([{ref=>$params->{model_ref}}])->[0]{data}{modelcompounds};
+    my $inputModelF = $wshandle->get_objects([{workspace=>$params->{workspace},name=>$params->{model_id}}])->[0];#{data}{modelcompounds};
+    #my $inputModel = $wshandle->get_objects([{ref=>$params->{model_ref}}])->[0]{data}{modelcompounds};
+    my $inputModel =  $inputModelF->{data}{modelcompounds};
+
+    print "accessing input model $inputModelF->{id}\t genome_ref $inputModelF->{genome_ref}\n";
+    print "Writing the compound input file for PickAxe\n\n";
+
+    my $count =0;
     for (my $i=0; $i<@{$inputModel}; $i++){
 
         my @cpdId = split /_/, $inputModel->[$i]->{id};
@@ -192,13 +206,16 @@ sub runpicaxe
         if (defined $cpdStHash->{$cpdId[0]}->[1]){
         print $cpdListOut "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
         #print  "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
+        $count++;
         }
 
     }
+    print "$count lines of compounds data will be prepaired for Pickaxe execution, continuing.....\n";
 
     close $cpdListOut;
 
     print "Testing pickAxe execution....\n";
+
     system ('python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -h');
     system ('python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g 1 -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp');
     #system ('python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g 1 -c /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/iAF1260.tsv -o /kb/module/work/tmp');
@@ -246,6 +263,7 @@ sub runpicaxe
         }
         $count++;
     }
+
     close $mcr;
     close $fhr;
 
@@ -262,12 +280,12 @@ sub runpicaxe
         model_name => $params->{out_model_id},
         workspace_name =>$params->{workspace},
         #genome => "",
-        #biomass => [],
+        biomass => [],
         model_file => $rxnFile,
         compounds_file => $cpdFile
     };
 
-    my $ffuRef = $ffu->tsv_file_to_model($tsvToModel);
+    my $ffuRef = $fbaO->tsv_file_to_model($tsvToModel);
 
     print &Dumper ($ffuRef);
 

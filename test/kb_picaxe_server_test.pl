@@ -4,7 +4,8 @@ use Test::More;
 use Config::Simple;
 use Time::HiRes qw(time);
 use Bio::KBase::AuthToken;
-use Bio::KBase::workspace::Client;
+#use Bio::KBase::workspace::Client;
+use Workspace::WorkspaceClient;
 use kb_picaxe::kb_picaxeImpl;
 
 local $| = 1;
@@ -13,7 +14,8 @@ my $config_file = $ENV{'KB_DEPLOYMENT_CONFIG'};
 my $config = new Config::Simple($config_file)->get_block('kb_picaxe');
 my $ws_url = $config->{"workspace-url"};
 my $ws_name = undef;
-my $ws_client = new Bio::KBase::workspace::Client($ws_url,token => $token);
+#my $ws_client = new Bio::KBase::workspace::Client($ws_url,token => $token);
+my $ws_client = Workspace::WorkspaceClient->new($ws_url,token => $token);
 my $auth_token = Bio::KBase::AuthToken->new(token => $token, ignore_authrc => 1);
 my $ctx = LocalCallContext->new($token, $auth_token->user_id);
 $kb_picaxe::kb_picaxeServer::CallContext = $ctx;
@@ -33,6 +35,19 @@ my $compoundInfo = {
     compound_name => "pyruvate"
 };
 
+#=head
+my $pickaxeParam = {
+    workspace => "janakakbase:narrative_1497100053395",
+    model_id => "M_leteus_model",
+    out_model_id => "M_leteus_model_NewModel",
+    #model_ref => "4953/12/1",
+    model_ref => "22452/2/2",
+    compounds => [$compoundInfo]
+
+};
+
+#=cut
+=head
 my $pickaxeParam = {
     workspace => "janakakbase:narrative_1495258241399",
     model_id => "testmodelid",
@@ -42,6 +57,7 @@ my $pickaxeParam = {
     compounds => [$compoundInfo]
 
 };
+=cut
 
 
 
