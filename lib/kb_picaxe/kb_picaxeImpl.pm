@@ -259,7 +259,7 @@ sub runpicaxe
             print $mcr "$rxnId[0]\t>\tc0\tnone\t$rxnId[0]\tnone\tnone\tnone\t$rxnId[2]\n";
         if ($count == 4000){
 
-            last;
+            #last;
         }
         $count++;
     }
@@ -279,7 +279,7 @@ sub runpicaxe
 
         model_name => $params->{out_model_id},
         workspace_name =>$params->{workspace},
-        #genome => "",
+        #genome => "none",
         biomass => [],
         model_file => $rxnFile,
         compounds_file => $cpdFile
