@@ -5,7 +5,7 @@ name: PickAxe - Generate novel reaction rules to compounds
 tooltip: |
     Generate novel reaction rules to compounds
 screenshots: []
-icon: icon.png
+icon: pickaxe-purple.png
 
 #
 # define a set of similar methods that might be useful to the user
