@@ -109,9 +109,9 @@ sub new
 
 
 
-=head2 runpicaxe
+=head2 runpickaxe
 
-  $return = $obj->runpicaxe($params)
+  $return = $obj->runpickaxe($params)
 
 =over 4
 
@@ -169,7 +169,7 @@ PicAxeResults is a reference to a hash where the following keys are defined:
 
 =cut
 
- sub runpicaxe
+ sub runpickaxe
 {
     my($self, @args) = @_;
 
@@ -178,7 +178,7 @@ PicAxeResults is a reference to a hash where the following keys are defined:
     if ((my $n = @args) != 1)
     {
 	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function runpicaxe (received $n, expecting 1)");
+							       "Invalid argument count for function runpickaxe (received $n, expecting 1)");
     }
     {
 	my($params) = @args;
@@ -186,31 +186,31 @@ PicAxeResults is a reference to a hash where the following keys are defined:
 	my @_bad_arguments;
         (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
         if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to runpicaxe:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    my $msg = "Invalid arguments passed to runpickaxe:\n" . join("", map { "\t$_\n" } @_bad_arguments);
 	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'runpicaxe');
+								   method_name => 'runpickaxe');
 	}
     }
 
     my $url = $self->{url};
     my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_pickaxe.runpicaxe",
+	    method => "kb_pickaxe.runpickaxe",
 	    params => \@args,
     });
     if ($result) {
 	if ($result->is_error) {
 	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
 					       code => $result->content->{error}->{code},
-					       method_name => 'runpicaxe',
+					       method_name => 'runpickaxe',
 					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
 					      );
 	} else {
 	    return wantarray ? @{$result->result} : $result->result->[0];
 	}
     } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method runpicaxe",
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method runpickaxe",
 					    status_line => $self->{client}->status_line,
-					    method_name => 'runpicaxe',
+					    method_name => 'runpickaxe',
 				       );
     }
 }
@@ -258,16 +258,16 @@ sub version {
             Bio::KBase::Exceptions::JSONRPC->throw(
                 error => $result->error_message,
                 code => $result->content->{code},
-                method_name => 'runpicaxe',
+                method_name => 'runpickaxe',
             );
         } else {
             return wantarray ? @{$result->result} : $result->result->[0];
         }
     } else {
         Bio::KBase::Exceptions::HTTP->throw(
-            error => "Error invoking method runpicaxe",
+            error => "Error invoking method runpickaxe",
             status_line => $self->{client}->status_line,
-            method_name => 'runpicaxe',
+            method_name => 'runpickaxe',
         );
     }
 }

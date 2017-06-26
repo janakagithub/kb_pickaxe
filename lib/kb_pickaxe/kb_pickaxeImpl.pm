@@ -2,10 +2,10 @@ package kb_pickaxe::kb_pickaxeImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org 
+# http://semver.org
 our $VERSION = '1.1.0';
 our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
-our $GIT_COMMIT_HASH = 'fe78b271cd1d98998b471654598d9072c6685eae';
+our $GIT_COMMIT_HASH = '6183a4ddbf7fea6c48a7a1cc32180b476f6ac923';
 
 =head1 NAME
 
@@ -64,9 +64,9 @@ sub new
 
 
 
-=head2 runpicaxe
+=head2 runpickaxe
 
-  $return = $obj->runpicaxe($params)
+  $return = $obj->runpickaxe($params)
 
 =over 4
 
@@ -126,7 +126,7 @@ PicAxeResults is a reference to a hash where the following keys are defined:
 
 =cut
 
-sub runpicaxe
+sub runpickaxe
 {
     my $self = shift;
     my($params) = @_;
@@ -134,15 +134,14 @@ sub runpicaxe
     my @_bad_arguments;
     (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument \"params\" (value was \"$params\")");
     if (@_bad_arguments) {
-	my $msg = "Invalid arguments passed to runpicaxe:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	my $msg = "Invalid arguments passed to runpickaxe:\n" . join("", map { "\t$_\n" } @_bad_arguments);
 	Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-							       method_name => 'runpicaxe');
+							       method_name => 'runpickaxe');
     }
 
     my $ctx = $kb_pickaxe::kb_pickaxeServer::CallContext;
     my($return);
-    #BEGIN runpicaxe
-
+    #BEGIN runpickaxe
     my $fbaO = new fba_tools::fba_toolsClient( $self->{'callbackURL'},
                                                             ( 'service_version' => 'dev',
                                                               'async_version' => 'dev',
@@ -296,13 +295,14 @@ sub runpicaxe
     print &Dumper ($returnVar);
 
     return $returnVar;
-    #END runpicaxe
+
+    #END runpickaxe
     my @_bad_returns;
     (ref($return) eq 'HASH') or push(@_bad_returns, "Invalid type for return variable \"return\" (value was \"$return\")");
     if (@_bad_returns) {
-	my $msg = "Invalid returns passed to runpicaxe:\n" . join("", map { "\t$_\n" } @_bad_returns);
+	my $msg = "Invalid returns passed to runpickaxe:\n" . join("", map { "\t$_\n" } @_bad_returns);
 	Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-							       method_name => 'runpicaxe');
+							       method_name => 'runpickaxe');
     }
     return($return);
 }
@@ -310,7 +310,7 @@ sub runpicaxe
 
 
 
-=head2 status 
+=head2 status
 
   $return = $obj->status()
 

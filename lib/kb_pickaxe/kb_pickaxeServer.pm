@@ -28,19 +28,19 @@ has 'local_headers' => (is => 'ro', isa => 'HashRef');
 our $CallContext;
 
 our %return_counts = (
-        'runpicaxe' => 1,
+        'runpickaxe' => 1,
         'status' => 1,
 );
 
 our %method_authentication = (
-        'runpicaxe' => 'required',
+        'runpickaxe' => 'required',
 );
 
 sub _build_valid_methods
 {
     my($self) = @_;
     my $methods = {
-        'runpicaxe' => 1,
+        'runpickaxe' => 1,
         'status' => 1,
     };
     return $methods;

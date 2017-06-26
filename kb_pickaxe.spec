@@ -33,5 +33,5 @@ module kb_pickaxe {
         string model_ref;
     }  PicAxeResults;
 
-    funcdef runpicaxe(RunPicAxe params) returns (PicAxeResults) authentication required;
+    funcdef runpickaxe(RunPicAxe params) returns (PicAxeResults) authentication required;
 };

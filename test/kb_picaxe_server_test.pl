@@ -63,7 +63,7 @@ my $pickaxeParam = {
 
 
 eval {
- my $ret =$impl->runpicaxe($pickaxeParam);
+ my $ret =$impl->runpickaxe($pickaxeParam);
 };
 my $err = undef;
 if ($@) {

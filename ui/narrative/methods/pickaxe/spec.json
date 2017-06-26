@@ -51,7 +51,7 @@
         "service-mapping": {
             "url": "",
             "name": "kb_pickaxe",
-            "method": "runpicaxe",
+            "method": "runpickaxe",
             "input_mapping": [
                 {
                     "narrative_system_variable": "workspace",
