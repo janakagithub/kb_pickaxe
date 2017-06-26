@@ -1,11 +1,11 @@
 #
 # define display information
 #
-name: PickAxe - Generate novel reaction rules to compounds
+name: PickAxe - Generate novel compounds from reaction rules
 tooltip: |
-    Generate novel reaction rules to compounds
+    Generate novel compounds based enzymatic and spontanios reaction rules
 screenshots: []
-icon: icon.png
+icon: pickaxe-purple.png
 
 #
 # define a set of similar methods that might be useful to the user
@@ -15,7 +15,7 @@ suggestions:
         related:
             []
         next:
-            []
+            [gapfill_metabolic_model]
     methods:
         related:
             []
@@ -30,7 +30,7 @@ parameters :
         ui-name : |
             Input Model Name
         short-hint : |
-            Model Name
+            Model with source compounds
     compounds :
         ui-name : |
             List of compounds
@@ -40,6 +40,39 @@ parameters :
         ui-name : |
             Output Model Name
         short-hint : |
-           Name of new outputmodel
+           Name of new model
 description : |
-    <p>This is a simple method designed to illustrate the KBase SDK.</p>
+    <p>This is a Narative application for running <a href="https://github.com/JamesJeffryes/MINE-Database/blob/master/minedatabase/pickaxe.py">
+    Pickaxe </a> which generates novel compounds based enzymatic and spontanios
+     reaction rules. This tool originally written by <a href="http://jamesjeffryes.github.io/">
+     James Jeffryes.</a></p>
+
+     <p>PickAxe iteratively applies a set of SMARTS reacion rules which represent
+     generalized enzymatically catalyzed and spontanios reactions to a pool of
+     compounds. As novel compounds are generated, they are added to the
+     reaction pool until the maximum number of iterations have elapsed. The
+     result is a directed (but not acyclic) graph that branches from a small
+     number of source compounds to a large number of daughter compounds with
+     each transition labeled with its reaction type. The reaction rules are
+     hand-curated by examining common reaction motifs and cover all classes of
+     chemistry in the Enzyme Commission (EC) Classification system as well as a
+     set of spontanios reactions. The rules vary in their specificity and thus
+     the breadth and number of transformations they produce as a result of the
+     multiplicity of ways a chemical transformation can be generalized. This
+     approch has found a variety of applications including predicting
+     xenodegradation pathways, synthesis of value added compounds, and
+     simulation of thermodynamic landscapes.</p>
+
+     <p>Implimented in KBase by: Janaka Edirisinghe & James Jeffryes</p>
+
+publications :
+    -
+        pmid: 26322134
+        display-text : |
+            'J. Jeffryes, R. Colestani, M. El-Badawi, T. Kind... C. Henry “MINEs: Open access databases of computationally predicted enzyme promiscuity products for untargeted metabolomics” J. Cheminformatics 7:44 (2015)'
+        link: http://www.jcheminf.com/content/7/1/44
+    -
+        pmid: 27284066
+        display-text : |
+            'C.Lerma-Ortiz, J.Jeffryes, A.Cooper...C.Henry & A.Hanson “Nothing of chemistry disappears in biology”: The Top 30 damage-prone metabolites Biochem. Soc. Trans. 44, 961-71 (2016)'
+        link: http://www.ncbi.nlm.nih.gov/pubmed/27284066
