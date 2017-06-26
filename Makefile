@@ -1,7 +1,7 @@
-SERVICE = kb_picaxe
-SERVICE_CAPS = kb_picaxe
-SPEC_FILE = kb_picaxe.spec
-URL = https://kbase.us/services/kb_picaxe
+SERVICE = kb_pickaxe
+SERVICE_CAPS = kb_pickaxe
+SPEC_FILE = kb_pickaxe.spec
+URL = https://kbase.us/services/kb_pickaxe
 DIR = $(shell pwd)
 LIB_DIR = lib
 SCRIPTS_DIR = scripts

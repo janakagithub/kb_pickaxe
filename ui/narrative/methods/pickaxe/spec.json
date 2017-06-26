@@ -50,7 +50,7 @@
     "behavior": {
         "service-mapping": {
             "url": "",
-            "name": "kb_picaxe",
+            "name": "kb_pickaxe",
             "method": "runpicaxe",
             "input_mapping": [
                 {

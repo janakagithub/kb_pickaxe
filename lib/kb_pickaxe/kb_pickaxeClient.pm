@@ -1,4 +1,4 @@
-package kb_picaxe::kb_picaxeClient;
+package kb_pickaxe::kb_pickaxeClient;
 
 use JSON::RPC::Client;
 use POSIX;
@@ -21,7 +21,7 @@ our $VERSION = "0.1.0";
 
 =head1 NAME
 
-kb_picaxe::kb_picaxeClient
+kb_pickaxe::kb_pickaxeClient
 
 =head1 DESCRIPTION
 
@@ -38,7 +38,7 @@ sub new
     
 
     my $self = {
-	client => kb_picaxe::kb_picaxeClient::RpcClient->new,
+	client => kb_pickaxe::kb_pickaxeClient::RpcClient->new,
 	url => $url,
 	headers => [],
     };
@@ -120,14 +120,14 @@ sub new
 =begin html
 
 <pre>
-$params is a kb_picaxe.RunPicAxe
-$return is a kb_picaxe.PicAxeResults
+$params is a kb_pickaxe.RunPicAxe
+$return is a kb_pickaxe.PicAxeResults
 RunPicAxe is a reference to a hash where the following keys are defined:
-	workspace has a value which is a kb_picaxe.workspace_name
-	model_id has a value which is a kb_picaxe.model_id
+	workspace has a value which is a kb_pickaxe.workspace_name
+	model_id has a value which is a kb_pickaxe.model_id
 	model_ref has a value which is a string
-	out_model_id has a value which is a kb_picaxe.model_id
-	compounds has a value which is a reference to a list where each element is a kb_picaxe.EachCompound
+	out_model_id has a value which is a kb_pickaxe.model_id
+	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
 model_id is a string
 EachCompound is a reference to a hash where the following keys are defined:
@@ -142,14 +142,14 @@ PicAxeResults is a reference to a hash where the following keys are defined:
 
 =begin text
 
-$params is a kb_picaxe.RunPicAxe
-$return is a kb_picaxe.PicAxeResults
+$params is a kb_pickaxe.RunPicAxe
+$return is a kb_pickaxe.PicAxeResults
 RunPicAxe is a reference to a hash where the following keys are defined:
-	workspace has a value which is a kb_picaxe.workspace_name
-	model_id has a value which is a kb_picaxe.model_id
+	workspace has a value which is a kb_pickaxe.workspace_name
+	model_id has a value which is a kb_pickaxe.model_id
 	model_ref has a value which is a string
-	out_model_id has a value which is a kb_picaxe.model_id
-	compounds has a value which is a reference to a list where each element is a kb_picaxe.EachCompound
+	out_model_id has a value which is a kb_pickaxe.model_id
+	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
 model_id is a string
 EachCompound is a reference to a hash where the following keys are defined:
@@ -194,7 +194,7 @@ PicAxeResults is a reference to a hash where the following keys are defined:
 
     my $url = $self->{url};
     my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_picaxe.runpicaxe",
+	    method => "kb_pickaxe.runpicaxe",
 	    params => \@args,
     });
     if ($result) {
@@ -225,7 +225,7 @@ sub status
     }
     my $url = $self->{url};
     my $result = $self->{client}->call($url, $self->{headers}, {
-        method => "kb_picaxe.status",
+        method => "kb_pickaxe.status",
         params => \@args,
     });
     if ($result) {
@@ -250,7 +250,7 @@ sub status
 sub version {
     my ($self) = @_;
     my $result = $self->{client}->call($self->{url}, $self->{headers}, {
-        method => "kb_picaxe.version",
+        method => "kb_pickaxe.version",
         params => [],
     });
     if ($result) {
@@ -293,10 +293,10 @@ sub _validate_version {
         );
     }
     if ($sMinor > $cMinor) {
-        warn "New client version available for kb_picaxe::kb_picaxeClient\n";
+        warn "New client version available for kb_pickaxe::kb_pickaxeClient\n";
     }
     if ($sMajor == 0) {
-        warn "kb_picaxe::kb_picaxeClient version is $svr_version. API subject to change.\n";
+        warn "kb_pickaxe::kb_pickaxeClient version is $svr_version. API subject to change.\n";
     }
 }
 
@@ -410,11 +410,11 @@ compound_name has a value which is a string
 
 <pre>
 a reference to a hash where the following keys are defined:
-workspace has a value which is a kb_picaxe.workspace_name
-model_id has a value which is a kb_picaxe.model_id
+workspace has a value which is a kb_pickaxe.workspace_name
+model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
-out_model_id has a value which is a kb_picaxe.model_id
-compounds has a value which is a reference to a list where each element is a kb_picaxe.EachCompound
+out_model_id has a value which is a kb_pickaxe.model_id
+compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
 </pre>
 
@@ -423,11 +423,11 @@ compounds has a value which is a reference to a list where each element is a kb_
 =begin text
 
 a reference to a hash where the following keys are defined:
-workspace has a value which is a kb_picaxe.workspace_name
-model_id has a value which is a kb_picaxe.model_id
+workspace has a value which is a kb_pickaxe.workspace_name
+model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
-out_model_id has a value which is a kb_picaxe.model_id
-compounds has a value which is a reference to a list where each element is a kb_picaxe.EachCompound
+out_model_id has a value which is a kb_pickaxe.model_id
+compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
 
 =end text
@@ -468,7 +468,7 @@ model_ref has a value which is a string
 
 =cut
 
-package kb_picaxe::kb_picaxeClient::RpcClient;
+package kb_pickaxe::kb_pickaxeClient::RpcClient;
 use base 'JSON::RPC::Client';
 use POSIX;
 use strict;

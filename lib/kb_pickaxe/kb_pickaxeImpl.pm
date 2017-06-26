@@ -1,15 +1,15 @@
-package kb_picaxe::kb_picaxeImpl;
+package kb_pickaxe::kb_pickaxeImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org
+# http://semver.org 
 our $VERSION = '1.1.0';
 our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
-our $GIT_COMMIT_HASH = '48f97e5a2fc2ef4d6e057dfd7f45551ac1364316';
+our $GIT_COMMIT_HASH = 'fe78b271cd1d98998b471654598d9072c6685eae';
 
 =head1 NAME
 
-kb_picaxe
+kb_pickaxe
 
 =head1 DESCRIPTION
 
@@ -40,7 +40,7 @@ sub new
 
     my $config_file = $ENV{ KB_DEPLOYMENT_CONFIG };
     my $cfg = Config::IniFiles->new(-file=>$config_file);
-    my $wsInstance = $cfg->val('kb_picaxe','workspace-url');
+    my $wsInstance = $cfg->val('kb_pickaxe','workspace-url');
     die "no workspace-url defined" unless $wsInstance;
 
     $self->{'workspace-url'} = $wsInstance;
@@ -75,14 +75,14 @@ sub new
 =begin html
 
 <pre>
-$params is a kb_picaxe.RunPicAxe
-$return is a kb_picaxe.PicAxeResults
+$params is a kb_pickaxe.RunPicAxe
+$return is a kb_pickaxe.PicAxeResults
 RunPicAxe is a reference to a hash where the following keys are defined:
-	workspace has a value which is a kb_picaxe.workspace_name
-	model_id has a value which is a kb_picaxe.model_id
+	workspace has a value which is a kb_pickaxe.workspace_name
+	model_id has a value which is a kb_pickaxe.model_id
 	model_ref has a value which is a string
-	out_model_id has a value which is a kb_picaxe.model_id
-	compounds has a value which is a reference to a list where each element is a kb_picaxe.EachCompound
+	out_model_id has a value which is a kb_pickaxe.model_id
+	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
 model_id is a string
 EachCompound is a reference to a hash where the following keys are defined:
@@ -97,14 +97,14 @@ PicAxeResults is a reference to a hash where the following keys are defined:
 
 =begin text
 
-$params is a kb_picaxe.RunPicAxe
-$return is a kb_picaxe.PicAxeResults
+$params is a kb_pickaxe.RunPicAxe
+$return is a kb_pickaxe.PicAxeResults
 RunPicAxe is a reference to a hash where the following keys are defined:
-	workspace has a value which is a kb_picaxe.workspace_name
-	model_id has a value which is a kb_picaxe.model_id
+	workspace has a value which is a kb_pickaxe.workspace_name
+	model_id has a value which is a kb_pickaxe.model_id
 	model_ref has a value which is a string
-	out_model_id has a value which is a kb_picaxe.model_id
-	compounds has a value which is a reference to a list where each element is a kb_picaxe.EachCompound
+	out_model_id has a value which is a kb_pickaxe.model_id
+	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
 model_id is a string
 EachCompound is a reference to a hash where the following keys are defined:
@@ -139,7 +139,7 @@ sub runpicaxe
 							       method_name => 'runpicaxe');
     }
 
-    my $ctx = $kb_picaxe::kb_picaxeServer::CallContext;
+    my $ctx = $kb_pickaxe::kb_pickaxeServer::CallContext;
     my($return);
     #BEGIN runpicaxe
 
@@ -310,7 +310,7 @@ sub runpicaxe
 
 
 
-=head2 status
+=head2 status 
 
   $return = $obj->status()
 
@@ -459,11 +459,11 @@ compound_name has a value which is a string
 
 <pre>
 a reference to a hash where the following keys are defined:
-workspace has a value which is a kb_picaxe.workspace_name
-model_id has a value which is a kb_picaxe.model_id
+workspace has a value which is a kb_pickaxe.workspace_name
+model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
-out_model_id has a value which is a kb_picaxe.model_id
-compounds has a value which is a reference to a list where each element is a kb_picaxe.EachCompound
+out_model_id has a value which is a kb_pickaxe.model_id
+compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
 </pre>
 
@@ -472,11 +472,11 @@ compounds has a value which is a reference to a list where each element is a kb_
 =begin text
 
 a reference to a hash where the following keys are defined:
-workspace has a value which is a kb_picaxe.workspace_name
-model_id has a value which is a kb_picaxe.model_id
+workspace has a value which is a kb_pickaxe.workspace_name
+model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
-out_model_id has a value which is a kb_picaxe.model_id
-compounds has a value which is a reference to a list where each element is a kb_picaxe.EachCompound
+out_model_id has a value which is a kb_pickaxe.model_id
+compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
 
 =end text

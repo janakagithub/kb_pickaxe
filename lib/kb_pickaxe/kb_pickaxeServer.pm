@@ -1,4 +1,4 @@
-package kb_picaxe::kb_picaxeServer;
+package kb_pickaxe::kb_pickaxeServer;
 
 
 use Data::Dumper;
@@ -62,7 +62,7 @@ sub get_service_name
 {
     my ($self) = @_;
     if(!defined $ENV{$SERVICE}) {
-        return 'kb_picaxe';
+        return 'kb_pickaxe';
     }
     return $ENV{$SERVICE};
 }
@@ -206,7 +206,7 @@ sub call_method {
 
     my ($module, $method, $modname) = @$method_info{qw(module method modname)};
     
-    my $ctx = kb_picaxe::kb_picaxeServerContext->new($self->{loggers}->{userlog},
+    my $ctx = kb_pickaxe::kb_pickaxeServerContext->new($self->{loggers}->{userlog},
                            client_ip => $self->getIPAddress());
     $ctx->module($modname);
     $ctx->method($method);
@@ -216,7 +216,7 @@ sub call_method {
     my $prov_action = {'service' => $modname, 'method' => $method, 'method_params' => $args};
     $ctx->provenance([$prov_action]);
 {
-    # Service kb_picaxe requires authentication.
+    # Service kb_pickaxe requires authentication.
 
     my $method_auth = $method_authentication{$method};
     $ctx->authenticated(0);
@@ -230,7 +230,7 @@ sub call_method {
 
 	if (!$token && $method_auth eq 'required')
 	{
-	    $self->exception('PerlError', "Authentication required for kb_picaxe but no authentication header was passed");
+	    $self->exception('PerlError', "Authentication required for kb_pickaxe but no authentication header was passed");
 	}
 
 	my $auth_token;
@@ -276,7 +276,7 @@ sub call_method {
         local $ENV{KBRPC_METADATA} = $kb_metadata if $kb_metadata;
         local $ENV{KBRPC_ERROR_DEST} = $kb_errordest if $kb_errordest;
 
-        my $stderr = kb_picaxe::kb_picaxeServerStderrWrapper->new($ctx, $get_time);
+        my $stderr = kb_pickaxe::kb_pickaxeServerStderrWrapper->new($ctx, $get_time);
         $ctx->stderr($stderr);
 
         my $xFF = $self->_plack_req_header("X-Forwarded-For");
@@ -367,7 +367,7 @@ sub get_method
     if (!$self->valid_methods->{$method})
     {
 	$self->exception('NoSuchMethod',
-			 "'$method' is not a valid method in service kb_picaxe.");
+			 "'$method' is not a valid method in service kb_pickaxe.");
     }
 	
     my $inst = $self->instance_dispatch->{$package};
@@ -453,13 +453,13 @@ sub handle_error_cli {
         . " this error: $@\n";
 }
 
-package kb_picaxe::kb_picaxeServerContext;
+package kb_pickaxe::kb_pickaxeServerContext;
 
 use strict;
 
 =head1 NAME
 
-kb_picaxe::kb_picaxeServerContext
+kb_pickaxe::kb_pickaxeServerContext
 
 head1 DESCRIPTION
 
@@ -551,7 +551,7 @@ sub clear_log_level
     $self->{_logger}->clear_user_log_level();
 }
 
-package kb_picaxe::kb_picaxeServerStderrWrapper;
+package kb_pickaxe::kb_pickaxeServerStderrWrapper;
 
 use strict;
 use POSIX;
@@ -718,15 +718,15 @@ unless (caller) {
     my($input_file,$output_file,$token) = @ARGV;
     my @dispatch;
     {
-        use kb_picaxe::kb_picaxeImpl;
-        my $obj = kb_picaxe::kb_picaxeImpl->new;
-        push(@dispatch, 'kb_picaxe' => $obj);
+        use kb_pickaxe::kb_pickaxeImpl;
+        my $obj = kb_pickaxe::kb_pickaxeImpl->new;
+        push(@dispatch, 'kb_pickaxe' => $obj);
     }
     my %headers = (
         "Authorization" => $token,
         "CLI" => "1"
     );
-    my $server = kb_picaxe::kb_picaxeServer->new(
+    my $server = kb_pickaxe::kb_pickaxeServer->new(
         instance_dispatch => { @dispatch },
         allow_get => 0, 
         local_headers => \%headers);
