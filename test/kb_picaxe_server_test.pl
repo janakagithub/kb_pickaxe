@@ -37,9 +37,9 @@ my $compoundInfo = {
 
 #=head
 my $pickaxeParam = {
-    workspace => "janakakbase:narrative_1497100053395",
-    model_id => "M_leteus_model",
-    out_model_id => "M_leteus_model_NewModel",
+    workspace => "jjeffryes:narrative_1497984704461",
+    model_id => "iMR1_799",
+    out_model_id => "out_model",
     rule_set => "enzymatic",
     generations => 1,
     model_ref => "22452/2/2",
