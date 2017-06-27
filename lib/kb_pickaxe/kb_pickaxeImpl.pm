@@ -219,14 +219,14 @@ sub runpickaxe
     print "$params->{generations} gen $params->{rule_set}\n";
     print "Running Pickaxe\n";
     my $gen = $params->{generations};
-    if ($params->{rule_set} == 'spontanious') {
+
+    if ($params->{rule_set} eq 'spontanious') {
         system ("python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
-    }
-    elsif ($params->{rule_set} == 'enzymatic') {
-        system ("python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
-    }
-    else{
-        die "Invalid reaction rule set"
+    } elsif ($params->{rule_set} eq 'enzymatic') {
+        print "meh";
+        system ("python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+    } else{
+        die "Invalid reaction rule set";
     }
 
     #print &Dumper ($fm);
