@@ -33,21 +33,22 @@ class kb_pickaxe(object):
             trust_all_ssl_certificates=trust_all_ssl_certificates,
             auth_svc=auth_svc)
 
-    def runpicaxe(self, params, context=None):
+    def runpickaxe(self, params, context=None):
         """
-        :param params: instance of type "RunPicAxe" -> structure: parameter
+        :param params: instance of type "RunPickAxe" -> structure: parameter
            "workspace" of type "workspace_name" (A string representing a
            workspace name.), parameter "model_id" of type "model_id" (A
            string representing a model id.), parameter "model_ref" of String,
+           parameter "rule_set" of String, parameter "generations" of Long,
            parameter "out_model_id" of type "model_id" (A string representing
            a model id.), parameter "compounds" of list of type "EachCompound"
            -> structure: parameter "compound_id" of String, parameter
            "compound_name" of String
-        :returns: instance of type "PicAxeResults" -> structure: parameter
+        :returns: instance of type "PickAxeResults" -> structure: parameter
            "model_ref" of String
         """
         return self._client.call_method(
-            'kb_pickaxe.runpicaxe',
+            'kb_pickaxe.runpickaxe',
             [params], self._service_ver, context)
 
     def status(self, context=None):

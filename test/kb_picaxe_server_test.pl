@@ -40,7 +40,8 @@ my $pickaxeParam = {
     workspace => "janakakbase:narrative_1497100053395",
     model_id => "M_leteus_model",
     out_model_id => "M_leteus_model_NewModel",
-    #model_ref => "4953/12/1",
+    rule_set => "enzymatic",
+    generations => 1,
     model_ref => "22452/2/2",
     compounds => [$compoundInfo]
 

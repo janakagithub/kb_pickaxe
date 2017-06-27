@@ -2,10 +2,10 @@ package kb_pickaxe::kb_pickaxeImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org
+# http://semver.org 
 our $VERSION = '1.1.0';
 our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
-our $GIT_COMMIT_HASH = '6183a4ddbf7fea6c48a7a1cc32180b476f6ac923';
+our $GIT_COMMIT_HASH = '8ea4643ff9d474d30c75fa3c2827b8fa4fc6f96d';
 
 =head1 NAME
 
@@ -75,12 +75,14 @@ sub new
 =begin html
 
 <pre>
-$params is a kb_pickaxe.RunPicAxe
-$return is a kb_pickaxe.PicAxeResults
-RunPicAxe is a reference to a hash where the following keys are defined:
+$params is a kb_pickaxe.RunPickAxe
+$return is a kb_pickaxe.PickAxeResults
+RunPickAxe is a reference to a hash where the following keys are defined:
 	workspace has a value which is a kb_pickaxe.workspace_name
 	model_id has a value which is a kb_pickaxe.model_id
 	model_ref has a value which is a string
+	rule_set has a value which is a string
+	generations has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -88,7 +90,7 @@ model_id is a string
 EachCompound is a reference to a hash where the following keys are defined:
 	compound_id has a value which is a string
 	compound_name has a value which is a string
-PicAxeResults is a reference to a hash where the following keys are defined:
+PickAxeResults is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 
 </pre>
@@ -97,12 +99,14 @@ PicAxeResults is a reference to a hash where the following keys are defined:
 
 =begin text
 
-$params is a kb_pickaxe.RunPicAxe
-$return is a kb_pickaxe.PicAxeResults
-RunPicAxe is a reference to a hash where the following keys are defined:
+$params is a kb_pickaxe.RunPickAxe
+$return is a kb_pickaxe.PickAxeResults
+RunPickAxe is a reference to a hash where the following keys are defined:
 	workspace has a value which is a kb_pickaxe.workspace_name
 	model_id has a value which is a kb_pickaxe.model_id
 	model_ref has a value which is a string
+	rule_set has a value which is a string
+	generations has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -110,7 +114,7 @@ model_id is a string
 EachCompound is a reference to a hash where the following keys are defined:
 	compound_id has a value which is a string
 	compound_name has a value which is a string
-PicAxeResults is a reference to a hash where the following keys are defined:
+PickAxeResults is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 
 
@@ -213,11 +217,18 @@ sub runpickaxe
 
     close $cpdListOut;
 
-    print "Testing pickAxe execution....\n";
-
+    print "Testing pickAxe execution....\n"
     system ('python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -h');
-    system ('python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g 1 -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp');
-    #system ('python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g 1 -c /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/iAF1260.tsv -o /kb/module/work/tmp');
+    my $gen = $params->{generations};
+    if ($params->{rule_set} == 'spontanious') {
+        system ("python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+    }
+    elsif ($params->{rule_set} == 'enzymatic') {
+        system ("python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+    }
+    else{
+        die "Invalid reaction rule set"
+    }
 
     #print &Dumper ($fm);
 
@@ -310,7 +321,7 @@ sub runpickaxe
 
 
 
-=head2 status
+=head2 status 
 
   $return = $obj->status()
 
@@ -447,7 +458,7 @@ compound_name has a value which is a string
 
 
 
-=head2 RunPicAxe
+=head2 RunPickAxe
 
 =over 4
 
@@ -462,6 +473,8 @@ a reference to a hash where the following keys are defined:
 workspace has a value which is a kb_pickaxe.workspace_name
 model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
+rule_set has a value which is a string
+generations has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -475,6 +488,8 @@ a reference to a hash where the following keys are defined:
 workspace has a value which is a kb_pickaxe.workspace_name
 model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
+rule_set has a value which is a string
+generations has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -485,7 +500,7 @@ compounds has a value which is a reference to a list where each element is a kb_
 
 
 
-=head2 PicAxeResults
+=head2 PickAxeResults
 
 =over 4
 

@@ -120,12 +120,14 @@ sub new
 =begin html
 
 <pre>
-$params is a kb_pickaxe.RunPicAxe
-$return is a kb_pickaxe.PicAxeResults
-RunPicAxe is a reference to a hash where the following keys are defined:
+$params is a kb_pickaxe.RunPickAxe
+$return is a kb_pickaxe.PickAxeResults
+RunPickAxe is a reference to a hash where the following keys are defined:
 	workspace has a value which is a kb_pickaxe.workspace_name
 	model_id has a value which is a kb_pickaxe.model_id
 	model_ref has a value which is a string
+	rule_set has a value which is a string
+	generations has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -133,7 +135,7 @@ model_id is a string
 EachCompound is a reference to a hash where the following keys are defined:
 	compound_id has a value which is a string
 	compound_name has a value which is a string
-PicAxeResults is a reference to a hash where the following keys are defined:
+PickAxeResults is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 
 </pre>
@@ -142,12 +144,14 @@ PicAxeResults is a reference to a hash where the following keys are defined:
 
 =begin text
 
-$params is a kb_pickaxe.RunPicAxe
-$return is a kb_pickaxe.PicAxeResults
-RunPicAxe is a reference to a hash where the following keys are defined:
+$params is a kb_pickaxe.RunPickAxe
+$return is a kb_pickaxe.PickAxeResults
+RunPickAxe is a reference to a hash where the following keys are defined:
 	workspace has a value which is a kb_pickaxe.workspace_name
 	model_id has a value which is a kb_pickaxe.model_id
 	model_ref has a value which is a string
+	rule_set has a value which is a string
+	generations has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -155,7 +159,7 @@ model_id is a string
 EachCompound is a reference to a hash where the following keys are defined:
 	compound_id has a value which is a string
 	compound_name has a value which is a string
-PicAxeResults is a reference to a hash where the following keys are defined:
+PickAxeResults is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 
 
@@ -398,7 +402,7 @@ compound_name has a value which is a string
 
 
 
-=head2 RunPicAxe
+=head2 RunPickAxe
 
 =over 4
 
@@ -413,6 +417,8 @@ a reference to a hash where the following keys are defined:
 workspace has a value which is a kb_pickaxe.workspace_name
 model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
+rule_set has a value which is a string
+generations has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -426,6 +432,8 @@ a reference to a hash where the following keys are defined:
 workspace has a value which is a kb_pickaxe.workspace_name
 model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
+rule_set has a value which is a string
+generations has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -436,7 +444,7 @@ compounds has a value which is a reference to a list where each element is a kb_
 
 
 
-=head2 PicAxeResults
+=head2 PickAxeResults
 
 =over 4
 

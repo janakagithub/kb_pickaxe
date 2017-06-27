@@ -25,13 +25,15 @@ module kb_pickaxe {
         workspace_name workspace;
         model_id model_id;
         string model_ref;
+        string rule_set;
+        int generations;
         model_id out_model_id;
         list <EachCompound> compounds;
-    } RunPicAxe;
+    } RunPickAxe;
 
     typedef structure {
         string model_ref;
-    }  PicAxeResults;
+    }  PickAxeResults;
 
-    funcdef runpickaxe(RunPicAxe params) returns (PicAxeResults) authentication required;
+    funcdef runpickaxe(RunPickAxe params) returns (PickAxeResults) authentication required;
 };
