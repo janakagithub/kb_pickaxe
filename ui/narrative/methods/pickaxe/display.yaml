@@ -36,6 +36,16 @@ parameters :
             List of compounds
         short-hint : |
             List of compounds
+    rule_set :
+        ui-name : |
+            Reaction rule set
+        short-hint : |
+            The set of reaction rules which will be applied to the compounds
+    generations :
+        ui-name : |
+            Number of generations
+        short-hint : |
+            The nuber of times reaction rules will be applied to the compounds
     out_model_id :
         ui-name : |
             Output Model Name

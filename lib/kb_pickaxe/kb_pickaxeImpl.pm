@@ -216,9 +216,8 @@ sub runpickaxe
     print "$count lines of compounds data will be prepaired for Pickaxe execution, continuing.....\n";
 
     close $cpdListOut;
-
-    print "Testing pickAxe execution....\n"
-    system ('python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -h');
+    print "$params->{generations} gen $params->{rule_set}\n";
+    print "Running Pickaxe\n";
     my $gen = $params->{generations};
     if ($params->{rule_set} == 'spontanious') {
         system ("python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
