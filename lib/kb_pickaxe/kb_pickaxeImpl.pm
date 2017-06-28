@@ -13,8 +13,8 @@ kb_pickaxe
 
 =head1 DESCRIPTION
 
-A KBase module: kb_picaxe
-This method wraps the PicAxe tool.
+A KBase module: kb_Pickaxe
+This method wraps the Pickaxe tool.
 
 =cut
 
@@ -220,11 +220,11 @@ sub runpickaxe
     print "Running Pickaxe\n";
     my $gen = $params->{generations};
 
-    if ($params->{rule_set} eq 'spontanious') {
-        system ("python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+    if ($params->{rule_set} eq 'spontaneous') {
+        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
     } elsif ($params->{rule_set} eq 'enzymatic') {
         print "meh";
-        system ("python3 /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/PicAxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
     } else{
         die "Invalid reaction rule set";
     }

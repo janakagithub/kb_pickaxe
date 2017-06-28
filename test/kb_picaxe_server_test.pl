@@ -40,7 +40,7 @@ my $pickaxeParam = {
     workspace => "jjeffryes:narrative_1497984704461",
     model_id => "iMR1_799",
     out_model_id => "spont_out",
-    rule_set => "spontanious",
+    rule_set => "spontaneous",
     generations => 1,
     compounds => [$compoundInfo]
 };
