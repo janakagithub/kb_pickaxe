@@ -167,16 +167,16 @@ public class KbPickaxeClient {
      * <p>Original spec-file function name: runpickaxe</p>
      * <pre>
      * </pre>
-     * @param   params   instance of type {@link us.kbase.kbpickaxe.RunPicAxe RunPicAxe}
-     * @return   instance of type {@link us.kbase.kbpickaxe.PicAxeResults PicAxeResults}
+     * @param   params   instance of type {@link us.kbase.kbpickaxe.RunPickAxe RunPickAxe}
+     * @return   instance of type {@link us.kbase.kbpickaxe.PickAxeResults PickAxeResults}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
-    public PicAxeResults runpickaxe(RunPicAxe params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+    public PickAxeResults runpickaxe(RunPickAxe params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         args.add(params);
-        TypeReference<List<PicAxeResults>> retType = new TypeReference<List<PicAxeResults>>() {};
-        List<PicAxeResults> res = caller.jsonrpcCall("kb_pickaxe.runpickaxe", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        TypeReference<List<PickAxeResults>> retType = new TypeReference<List<PickAxeResults>>() {};
+        List<PickAxeResults> res = caller.jsonrpcCall("kb_pickaxe.runpickaxe", args, retType, true, true, jsonRpcContext, this.serviceVersion);
         return res.get(0);
     }
 

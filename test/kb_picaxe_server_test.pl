@@ -37,13 +37,20 @@ my $compoundInfo = {
 
 #=head
 my $pickaxeParam = {
-    workspace => "janakakbase:narrative_1497100053395",
-    model_id => "M_leteus_model",
-    out_model_id => "M_leteus_model_NewModel",
-    #model_ref => "4953/12/1",
-    model_ref => "22452/2/2",
+    workspace => "jjeffryes:narrative_1497984704461",
+    model_id => "iMR1_799",
+    out_model_id => "spont_out",
+    rule_set => "spontanious",
+    generations => 1,
     compounds => [$compoundInfo]
-
+};
+my $pickaxeParam2 = {
+    workspace => "jjeffryes:narrative_1497984704461",
+    model_id => "iMR1_799",
+    out_model_id => "enz_out",
+    rule_set => "enzymatic",
+    generations => 1,
+    compounds => [$compoundInfo]
 };
 
 #=cut
@@ -64,6 +71,9 @@ my $pickaxeParam = {
 
 eval {
  my $ret =$impl->runpickaxe($pickaxeParam);
+};
+eval {
+ my $ret2 =$impl->runpickaxe($pickaxeParam2);
 };
 my $err = undef;
 if ($@) {

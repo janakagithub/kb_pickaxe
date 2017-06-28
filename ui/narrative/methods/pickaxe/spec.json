@@ -34,6 +34,43 @@
             }
         },
         {
+            "id": "rule_set",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "enzymatic" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": "enzymatic",
+                        "display": "Enzymatic Rules",
+                        "id": "enz",
+                        "ui_name": "Enzymatic Rules"
+                    },
+                    {
+                        "value": "spontaneous",
+                        "display": "Spontaneous Rules",
+                        "id": "spont",
+                        "ui_name": "Spontaneous Rules"
+                    }
+                ]
+            }
+        },
+        {
+		    "id" : "generations",
+		    "optional" : false,
+		    "advanced" : false,
+		    "allow_multiple" : false,
+		    "default_values" : [ "1" ],
+		    "field_type" : "text",
+			"text_options" : {
+			    "validate_as": "int",
+      			"min_int" : 1,
+      			"max_int" : 3
+		    }
+		},
+        {
             "id" : "out_model_id",
             "optional" : false,
             "advanced" : false,
@@ -65,7 +102,14 @@
                     "input_parameter": "compounds",
                     "target_property": "compounds"
                 },
-
+                {
+                    "input_parameter": "rule_set",
+                    "target_property": "rule_set"
+                },
+                {
+                    "input_parameter": "generations",
+                    "target_property": "generations"
+                },
                 {
                     "input_parameter": "out_model_id",
                     "target_property": "out_model_id"
