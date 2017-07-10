@@ -23,17 +23,6 @@
             }
         },
         {
-            "id": "compounds",
-            "optional": true,
-            "advanced": false,
-            "allow_multiple": true,
-            "default_values": [ "cpd000027_c0" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types" : [ ]
-            }
-        },
-        {
             "id": "rule_set",
             "optional": false,
             "advanced": false,
@@ -62,13 +51,14 @@
 		    "optional" : false,
 		    "advanced" : false,
 		    "allow_multiple" : false,
-		    "default_values" : [ "1" ],
-		    "field_type" : "text",
-			"text_options" : {
-			    "validate_as": "int",
-      			"min_int" : 1,
-      			"max_int" : 3
-		    }
+		    "default_values" : [ 1 ],
+		    "field_type" : "dropdown",
+			"field_type" : "text",
+            "text_options" : {
+                "validate_as": "int",
+                "min_int" : 1,
+                "max_int" : 3
+            }
 		},
         {
             "id" : "out_model_id",
@@ -97,10 +87,6 @@
                 {
                     "input_parameter": "model_id",
                     "target_property": "model_id"
-                },
-                {
-                    "input_parameter": "compounds",
-                    "target_property": "compounds"
                 },
                 {
                     "input_parameter": "rule_set",

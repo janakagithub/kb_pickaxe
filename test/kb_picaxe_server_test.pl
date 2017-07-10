@@ -53,21 +53,22 @@ my $pickaxeParam2 = {
     compounds => [$compoundInfo]
 };
 
-#=cut
-=head
-my $pickaxeParam = {
-    workspace => "janakakbase:narrative_1495258241399",
-    model_id => "testmodelid",
-    out_model_id => "NewModel",
-    #model_ref => "4953/12/1",
-    model_ref => "4953/17/2",
-    compounds => [$compoundInfo]
+my $pickaxeParamj = {
+    workspace => "janakakbase:narrative_1498509337193",
+    model_id => "BsubModel",
+    out_model_id => "spont_out_model",
+    rule_set => "spontaneous",
+    generations => 1
 
 };
-=cut
-
-
-
+my $pickaxeParam2j = {
+    workspace => "janakakbase:narrative_1498509337193",
+    model_id => "BsubModel",
+    out_model_id => "enz_out_model",
+    rule_set => "enzymatic",
+    generations => 1
+};
+#=cut
 
 eval {
  my $ret =$impl->runpickaxe($pickaxeParam);

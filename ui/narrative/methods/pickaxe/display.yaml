@@ -31,11 +31,6 @@ parameters :
             Input Model Name
         short-hint : |
             Model with source compounds
-    compounds :
-        ui-name : |
-            List of compounds
-        short-hint : |
-            List of compounds
     rule_set :
         ui-name : |
             Reaction rule set

@@ -2,7 +2,7 @@ package kb_pickaxe::kb_pickaxeImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org 
+# http://semver.org
 our $VERSION = '1.1.0';
 our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
 our $GIT_COMMIT_HASH = '8ea4643ff9d474d30c75fa3c2827b8fa4fc6f96d';
@@ -151,14 +151,6 @@ sub runpickaxe
                                                               'async_version' => 'dev',
                                                             )
                                                            );
-=head
-    my $ffu = new FBAFileUtil::FBAFileUtilClient( $self->{'callbackURL'},
-                                                            ( 'service_version' => 'dev',
-                                                              'async_version' => 'dev',
-                                                            )
-                                                          );
-=cut
-
     my $Cjson;
     {
         local $/; #Enable 'slurp' mode
@@ -217,16 +209,23 @@ sub runpickaxe
 
     close $cpdListOut;
     print "$params->{generations} gen $params->{rule_set}\n";
+    print "Testing pickAxe execution....\n";
+
+    system ('python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -h');
     print "Running Pickaxe\n";
+
     my $gen = $params->{generations};
 
     if ($params->{rule_set} eq 'spontaneous') {
         system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        print "generating novel compounds based on spontanios reaction rules\n";
     } elsif ($params->{rule_set} eq 'enzymatic') {
-        print "meh";
+
         system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        print "generating novel compounds based on enzymatic reaction rules\n";
+
     } else{
-        die "Invalid reaction rule set";
+        die "Invalid reaction rule set or rule set not defined";
     }
 
     #print &Dumper ($fm);
@@ -320,7 +319,7 @@ sub runpickaxe
 
 
 
-=head2 status 
+=head2 status
 
   $return = $obj->status()
 
