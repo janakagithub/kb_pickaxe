@@ -217,12 +217,12 @@ sub runpickaxe
     my $gen = $params->{generations};
 
     if ($params->{rule_set} eq 'spontaneous') {
-        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
         print "generating novel compounds based on spontanios reaction rules for $gen generations\n";
-    } elsif ($params->{rule_set} eq 'enzymatic') {
+        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
 
-        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+    } elsif ($params->{rule_set} eq 'enzymatic') {
         print "generating novel compounds based on enzymatic reaction rules for $gen generations\n";
+        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
 
     } else{
         die "Invalid reaction rule set or rule set not defined";
@@ -235,8 +235,6 @@ sub runpickaxe
 
     open my $mcf, ">", "/kb/module/work/tmp/FBAModelCompounds.tsv"  or die "Couldn't open FBAModelCompounds file $!\n";
     open my $mcr, ">", "/kb/module/work/tmp/FBAModelReactions.tsv"  or die "Couldn't open FBAModelCompounds file $!\n";;;
-
-
 
     print $mcf "id\tname\tformula\tcharge\taliases\n";
     <$fhc>;
@@ -259,17 +257,11 @@ sub runpickaxe
 
     print $mcr "id\tdirection\tcompartment\tgpr\tname\tenzyme\tpathway\treference\tequation\n";
     <$fhr>;
-    my $count =0;
     while (my $input = <$fhr>){
         chomp $input;
         my @rxnId = split /\t/, $input;
         #my $rxneq = s/=/-/g, $rxnId[2];
-            print $mcr "$rxnId[0]\t>\tc0\tnone\t$rxnId[0]\tnone\tnone\tnone\t$rxnId[2]\n";
-        if ($count == 4000){
-
-            #last;
-        }
-        $count++;
+        print $mcr "$rxnId[0]\t>\tc0\tnone\t$rxnId[0]\tnone\tnone\tnone\t$rxnId[2]\n";
     }
 
     close $mcr;
