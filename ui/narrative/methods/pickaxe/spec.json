@@ -52,7 +52,6 @@
 		    "advanced" : false,
 		    "allow_multiple" : false,
 		    "default_values" : [ 1 ],
-		    "field_type" : "dropdown",
 			"field_type" : "text",
             "text_options" : {
                 "validate_as": "int",
