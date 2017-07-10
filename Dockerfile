@@ -28,15 +28,11 @@ RUN conda install -y cairo \
                      rdkit
 
 RUN cd /kb/dev_container/modules && \
-   	mkdir PicAxe && cd PicAxe && \
+   	mkdir Pickaxe && cd Pickaxe && \
     git clone https://github.com/JamesJeffryes/MINE-Database.git  && \
     cd MINE-Database && \
 
     python3 setup.py install
-
-#    cp minedatabase /kb/deployment/lib/
-#    cp Scripts      /kb/deployment/lib/
-
 
 RUN echo '/kb/module/lib/kb_picaxe/ python3 setup.py install'
 
