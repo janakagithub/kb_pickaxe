@@ -3,9 +3,9 @@ use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
 # http://semver.org
-our $VERSION = '1.1.0';
+our $VERSION = '1.2.0';
 our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
-our $GIT_COMMIT_HASH = '8ea4643ff9d474d30c75fa3c2827b8fa4fc6f96d';
+our $GIT_COMMIT_HASH = '63d0afbffb4bc2ded4cbb18ee0a49b82ad3e9340';
 
 =head1 NAME
 
@@ -13,8 +13,8 @@ kb_pickaxe
 
 =head1 DESCRIPTION
 
-A KBase module: kb_Pickaxe
-This method wraps the Pickaxe tool.
+A KBase module: kb_picaxe
+This method wraps the PicAxe tool.
 
 =cut
 
@@ -189,7 +189,7 @@ sub runpickaxe
     my $inputModel =  $inputModelF->{data}{modelcompounds};
 
     print "accessing input model $inputModelF->{id}\t genome_ref $inputModelF->{genome_ref}\n";
-    print "Writing the compound input file for PickAxe\n\n";
+    print "Writing the compound input file for Pickaxe\n\n";
 
     my $count =0;
     for (my $i=0; $i<@{$inputModel}; $i++){
@@ -218,11 +218,11 @@ sub runpickaxe
 
     if ($params->{rule_set} eq 'spontaneous') {
         system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
-        print "generating novel compounds based on spontanios reaction rules\n";
+        print "generating novel compounds based on spontanios reaction rules for $gen generations\n";
     } elsif ($params->{rule_set} eq 'enzymatic') {
 
         system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
-        print "generating novel compounds based on enzymatic reaction rules\n";
+        print "generating novel compounds based on enzymatic reaction rules for $gen generations\n";
 
     } else{
         die "Invalid reaction rule set or rule set not defined";

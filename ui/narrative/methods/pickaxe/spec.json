@@ -52,11 +52,28 @@
 		    "advanced" : false,
 		    "allow_multiple" : false,
 		    "default_values" : [ 1 ],
-			"field_type" : "text",
-            "text_options" : {
-                "validate_as": "int",
-                "min_int" : 1,
-                "max_int" : 3
+			"field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": 1,
+                        "display": "One generation",
+                        "id": "One",
+                        "ui_name": "One generation"
+                    },
+                    {
+                        "value": 2,
+                        "display": "Two generations",
+                        "id": "Two",
+                        "ui_name": "Two generations"
+                    },
+                    {
+                        "value": 3,
+                        "display": "Three generations",
+                        "id": "Two",
+                        "ui_name": "Three generations"
+                    }
+                ]
             }
 		},
         {
