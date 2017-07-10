@@ -209,10 +209,10 @@ sub runpickaxe
 
     close $cpdListOut;
     print "$params->{generations} gen $params->{rule_set}\n";
-    print "Testing pickAxe execution....\n";
+    print "Testing Pickaxe execution first....\n";
 
     system ('python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -h');
-    print "Running Pickaxe\n";
+    print "Now running Pickaxe\n";
 
     my $gen = $params->{generations};
 
