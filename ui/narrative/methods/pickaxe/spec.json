@@ -57,21 +57,21 @@
                 "options": [
                     {
                         "value": 1,
-                        "display": "One generation",
+                        "display": "One",
                         "id": "One",
-                        "ui_name": "One generation"
+                        "ui_name": "One"
                     },
                     {
                         "value": 2,
-                        "display": "Two generations",
+                        "display": "Two",
                         "id": "Two",
-                        "ui_name": "Two generations"
+                        "ui_name": "Two"
                     },
                     {
                         "value": 3,
-                        "display": "Three generations",
+                        "display": "Three",
                         "id": "Two",
-                        "ui_name": "Three generations"
+                        "ui_name": "Three"
                     }
                 ]
             }
