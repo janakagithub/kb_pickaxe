@@ -30,11 +30,6 @@ sub get_ws_name {
     return $ws_name;
 }
 
-my $compoundInfo = {
-    compound_id => "cpd09988",
-    compound_name => "pyruvate"
-};
-
 #=head
 my $pickaxeParam = {
     workspace => "jjeffryes:narrative_1497984704461",
@@ -42,7 +37,6 @@ my $pickaxeParam = {
     out_model_id => "spont_out",
     rule_set => "spontaneous",
     generations => 1,
-    compounds => [$compoundInfo]
 };
 my $pickaxeParam2 = {
     workspace => "jjeffryes:narrative_1497984704461",
@@ -50,7 +44,13 @@ my $pickaxeParam2 = {
     out_model_id => "enz_out",
     rule_set => "enzymatic",
     generations => 1,
-    compounds => [$compoundInfo]
+};
+my $pickaxeParam3 = {
+    workspace => "jjeffryes:narrative_1497984704461",
+    model_id => "iMR1_799_compoundset",
+    out_model_id => "spont_out_compoundset",
+    rule_set => "spontaneous",
+    generations => 1,
 };
 
 my $pickaxeParamj = {
@@ -75,6 +75,9 @@ eval {
 };
 eval {
  my $ret2 =$impl->runpickaxe($pickaxeParam2);
+};
+eval {
+ my $ret3 =$impl->runpickaxe($pickaxeParam3);
 };
 my $err = undef;
 if ($@) {
