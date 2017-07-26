@@ -252,18 +252,18 @@ sub runpickaxe
     open my $mcf, ">", "/kb/module/work/tmp/FBAModelCompounds.tsv"  or die "Couldn't open FBAModelCompounds file $!\n";
     open my $mcr, ">", "/kb/module/work/tmp/FBAModelReactions.tsv"  or die "Couldn't open FBAModelCompounds file $!\n";;;
 
-    print $mcf "id\tname\tformula\tcharge\taliases\n";
+    print $mcf "id\tname\tformula\tcharge\taliases\tinchikey\smiles\n";
     <$fhc>;
     while (my $input = <$fhc>){
         chomp $input;
         my @cpdId = split /\t/, $input;
         if (defined $cpdStHash->{$cpdId[0]}){
 
-            print $mcf "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[3]\t$cpdStHash->{$cpdId[0]}->[2]\t$cpdStHash->{$cpdId[0]}->[5]\tnone\n"
+            print $mcf "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[3]\t$cpdStHash->{$cpdId[0]}->[2]\t$cpdStHash->{$cpdId[0]}->[5]\tnone\t$cpdId[3]\t$cpdId[4]\n"
         }
         else {
 
-            print $mcf "$cpdId[0]\t$cpdId[0]\tnone\t0\tnone\n";
+            print $mcf "$cpdId[0]\t$cpdId[0]\tnone\t0\tnone\t$cpdId[3]\t$cpdId[4]\n";
         }
 
 
@@ -277,7 +277,7 @@ sub runpickaxe
         chomp $input;
         my @rxnId = split /\t/, $input;
         #my $rxneq = s/=/-/g, $rxnId[2];
-        print $mcr "$rxnId[0]\t>\tc0\tnone\t$rxnId[0]\tnone\tnone\tnone\t$rxnId[2]\n";
+        print $mcr "$rxnId[0]\t>\tc0\tnone\t$rxnId[0]\tnone\tnone\t$rxnId[5]\t$rxnId[2]\n";
     }
 
     close $mcr;
