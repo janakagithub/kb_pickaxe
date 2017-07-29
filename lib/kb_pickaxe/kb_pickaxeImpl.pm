@@ -2,10 +2,10 @@ package kb_pickaxe::kb_pickaxeImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org
+# http://semver.org 
 our $VERSION = '1.2.0';
-our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
-our $GIT_COMMIT_HASH = '63d0afbffb4bc2ded4cbb18ee0a49b82ad3e9340';
+our $GIT_URL = 'git@github.com:janakagithub/kb_pickaxe.git';
+our $GIT_COMMIT_HASH = '90973c72036009dc4ed7793c4a2b19acdc70673d';
 
 =head1 NAME
 
@@ -83,6 +83,7 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 	rule_set has a value which is a string
 	generations has a value which is an int
+	prune has a value which is a string
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -107,6 +108,7 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 	rule_set has a value which is a string
 	generations has a value which is an int
+	prune has a value which is a string
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -318,7 +320,7 @@ sub runpickaxe
 
 
 
-=head2 status
+=head2 status 
 
   $return = $obj->status()
 
@@ -472,6 +474,7 @@ model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
+prune has a value which is a string
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -487,6 +490,7 @@ model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
+prune has a value which is a string
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 

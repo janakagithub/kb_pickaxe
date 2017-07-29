@@ -27,6 +27,7 @@ module kb_pickaxe {
         string model_ref;
         string rule_set;
         int generations;
+        string prune;
         model_id out_model_id;
         list <EachCompound> compounds;
     } RunPickAxe;
