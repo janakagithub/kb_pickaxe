@@ -200,7 +200,6 @@ sub runpickaxe
 
         if (defined $cpdStHash->{$cpdId[0]}->[1]){
         print $cpdListOut "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
-        #print  "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
         $count++;
         }
 
@@ -209,26 +208,34 @@ sub runpickaxe
 
     close $cpdListOut;
     print "$params->{generations} gen $params->{rule_set}\n";
-    print "Testing Pickaxe execution first....\n";
+    #print "Testing Pickaxe execution first....\n";
 
-    system ('python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -h');
+    #system ('python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -h');
     print "Now running Pickaxe\n";
 
     my $gen = $params->{generations};
+    my $command = "python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp";
 
     if ($params->{rule_set} eq 'spontaneous') {
         print "generating novel compounds based on spontanios reaction rules for $gen generations\n";
-        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        $command .= ' -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv';
 
     } elsif ($params->{rule_set} eq 'enzymatic') {
         print "generating novel compounds based on enzymatic reaction rules for $gen generations\n";
-        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        $command .= ' -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice';
 
     } else{
         die "Invalid reaction rule set or rule set not defined";
     }
 
-    #print &Dumper ($fm);
+    if ($params->{prune} eq 'model') {
+        $command .= ' -p /kb/module/work/tmp/inputModel.tsv';
+
+    } elsif ($params->{prune} eq 'biochemistry') {
+        $command .= ' -p /kb/module/data/Compounds.json';
+    }
+
+    system($command);
 
     open my $fhc, "<", "/kb/module/work/tmp/compounds.tsv" or die "Couldn't open compounds file $!\n";
     open my $fhr, "<", "/kb/module/work/tmp/reactions.tsv" or die "Couldn't open reactions file $!\n";
