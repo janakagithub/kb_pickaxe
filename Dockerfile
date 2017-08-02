@@ -14,12 +14,10 @@ RUN apt-get -y install nano
 ENV PATH /opt/conda/bin:$PATH
 ENV LANG C
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.3.11-Linux-x86_64.sh -O ~/miniconda.sh && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh
 
-RUN conda update conda
-RUN conda install python=3.5
 RUN conda config --add channels  https://conda.anaconda.org/rdkit
 RUN conda install -y cairo \
                      nomkl \
