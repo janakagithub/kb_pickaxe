@@ -28,9 +28,9 @@ suggestions:
 parameters :
     model_id :
         ui-name : |
-            Input Model Name
+            Compound Source
         short-hint : |
-            Model with source compounds
+            FBAModel or CompoundSet with source compounds
     rule_set :
         ui-name : |
             Reaction rule set

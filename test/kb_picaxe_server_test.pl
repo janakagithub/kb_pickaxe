@@ -1,4 +1,5 @@
 use strict;
+use JSON;
 use Data::Dumper;
 use Test::More;
 use Config::Simple;
@@ -30,53 +31,53 @@ sub get_ws_name {
     return $ws_name;
 }
 
-my $compoundInfo = {
-    compound_id => "cpd09988",
-    compound_name => "pyruvate"
-};
-
 #=head
-my $pickaxeParam = {
-    workspace => "jjeffryes:narrative_1497984704461",
-    model_id => "iMR1_799",
-    out_model_id => "spont_out",
-    rule_set => "spontaneous",
-    generations => 1,
-    prune => "biochemistry",
-    compounds => [$compoundInfo]
-};
-my $pickaxeParam2 = {
-    workspace => "jjeffryes:narrative_1497984704461",
-    model_id => "iMR1_799",
-    out_model_id => "enz_out",
-    rule_set => "enzymatic",
-    generations => 1,
-    prune => "model",
-    compounds => [$compoundInfo]
-};
-
-my $pickaxeParamj = {
-    workspace => "janakakbase:narrative_1498509337193",
-    model_id => "BsubModel",
-    out_model_id => "spont_out_model",
-    rule_set => "spontaneous",
-    generations => 1
-
-};
-my $pickaxeParam2j = {
-    workspace => "janakakbase:narrative_1498509337193",
-    model_id => "BsubModel",
-    out_model_id => "enz_out_model",
-    rule_set => "enzymatic",
-    generations => 1
+sub save_json_to_ws{
+    my $filePath = shift;
+    my $fileType = shift;
+    print "Loading $filePath\n";
+    my $Cjson;
+    {
+        local $/; #Enable 'slurp' mode
+        open my $fh, "<", $filePath;
+        $Cjson = <$fh>;
+        close $fh;
+    }
+    my $data = decode_json($Cjson);
+    my $ret = $ws_client->save_objects({
+        workspace => get_ws_name(),
+        objects   => [ {
+            type => $fileType,
+            name => $data->{name},
+            data => $data
+        } ]
+    })->[0];
 };
 #=cut
-
+save_json_to_ws("/kb/module/test/iMR1_799.json", "KBaseFBA.FBAModel");
+save_json_to_ws("/kb/module/test/model_set.json", "KBaseBiochem.CompoundSet");
+print("Data loaded\n");
 eval {
- my $ret =$impl->runpickaxe($pickaxeParam);
+    my $pickaxeParam = {
+        workspace => get_ws_name(),
+        model_id => "iMR1_799",
+        out_model_id => "spont_out",
+        rule_set => "spontaneous",
+        generations => 1,
+        prune=>'biochemistry',
+    };
+    my $ret =$impl->runpickaxe($pickaxeParam);
 };
 eval {
- my $ret2 =$impl->runpickaxe($pickaxeParam2);
+    my $pickaxeParam2 = {
+        workspace => get_ws_name(),
+        model_id => "model_set",
+        out_model_id => "enz_out",
+        rule_set => "enzymatic",
+        generations => 1,
+        prune=>'model'
+    };
+    my $ret2 =$impl->runpickaxe($pickaxeParam2);
 };
 my $err = undef;
 if ($@) {
