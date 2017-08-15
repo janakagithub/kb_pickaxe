@@ -65,6 +65,7 @@ eval {
         out_model_id => "spont_out",
         rule_set => "spontaneous",
         generations => 1,
+        prune=>'biochemistry',
     };
     my $ret =$impl->runpickaxe($pickaxeParam);
 };
@@ -75,6 +76,7 @@ eval {
         out_model_id => "enz_out",
         rule_set => "enzymatic",
         generations => 1,
+        prune=>'model'
     };
     my $ret2 =$impl->runpickaxe($pickaxeParam2);
 };
