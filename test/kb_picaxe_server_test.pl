@@ -42,6 +42,7 @@ my $pickaxeParam = {
     out_model_id => "spont_out",
     rule_set => "spontaneous",
     generations => 1,
+    prune => "biochemistry",
     compounds => [$compoundInfo]
 };
 my $pickaxeParam2 = {
@@ -50,6 +51,7 @@ my $pickaxeParam2 = {
     out_model_id => "enz_out",
     rule_set => "enzymatic",
     generations => 1,
+    prune => "model",
     compounds => [$compoundInfo]
 };
 
