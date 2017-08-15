@@ -52,7 +52,6 @@ sub save_json_to_ws{
             data => $data
         } ]
     })->[0];
-
 };
 #=cut
 save_json_to_ws("/kb/module/test/iMR1_799.json", "KBaseFBA.FBAModel");

@@ -2,10 +2,10 @@ package kb_pickaxe::kb_pickaxeImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org
+# http://semver.org 
 our $VERSION = '1.2.0';
-our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
-our $GIT_COMMIT_HASH = '63d0afbffb4bc2ded4cbb18ee0a49b82ad3e9340';
+our $GIT_URL = 'git@github.com:janakagithub/kb_pickaxe.git';
+our $GIT_COMMIT_HASH = '90973c72036009dc4ed7793c4a2b19acdc70673d';
 
 =head1 NAME
 
@@ -83,6 +83,7 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 	rule_set has a value which is a string
 	generations has a value which is an int
+	prune has a value which is a string
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -107,6 +108,7 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 	rule_set has a value which is a string
 	generations has a value which is an int
+	prune has a value which is a string
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -225,26 +227,34 @@ sub runpickaxe
         make_tsv_from_compoundset($inputModelF->{data}{compounds})
     }
     print "$params->{generations} gen $params->{rule_set}\n";
-    print "Testing Pickaxe execution first....\n";
+    #print "Testing Pickaxe execution first....\n";
 
-    system ('python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -h');
+    #system ('python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -h');
     print "Now running Pickaxe\n";
 
     my $gen = $params->{generations};
+    my $command = "python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp";
 
     if ($params->{rule_set} eq 'spontaneous') {
         print "generating novel compounds based on spontanios reaction rules for $gen generations\n";
-        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        $command .= ' -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv';
 
     } elsif ($params->{rule_set} eq 'enzymatic') {
         print "generating novel compounds based on enzymatic reaction rules for $gen generations\n";
-        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        $command .= ' -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice';
 
     } else{
         die "Invalid reaction rule set or rule set not defined";
     }
 
-    #print &Dumper ($fm);
+    if ($params->{prune} eq 'model') {
+        $command .= ' -p /kb/module/work/tmp/inputModel.tsv';
+
+    } elsif ($params->{prune} eq 'biochemistry') {
+        $command .= ' -p /kb/module/data/Compounds.json';
+    }
+
+    system($command);
 
     open my $fhc, "<", "/kb/module/work/tmp/compounds.tsv" or die "Couldn't open compounds file $!\n";
     open my $fhr, "<", "/kb/module/work/tmp/reactions.tsv" or die "Couldn't open reactions file $!\n";
@@ -327,7 +337,7 @@ sub runpickaxe
 
 
 
-=head2 status
+=head2 status 
 
   $return = $obj->status()
 
@@ -481,6 +491,7 @@ model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
+prune has a value which is a string
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -496,6 +507,7 @@ model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
+prune has a value which is a string
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
