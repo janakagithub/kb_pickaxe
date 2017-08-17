@@ -29,7 +29,7 @@ RUN cd /kb/dev_container/modules && \
    	mkdir Pickaxe && cd Pickaxe && \
     git clone https://github.com/JamesJeffryes/MINE-Database.git  && \
     cd MINE-Database && \
-    python3 setup.py install
+    python3 setup.py install #cache break 08/17/17
 
 RUN echo '/kb/module/lib/kb_picaxe/ python3 setup.py install'
 
