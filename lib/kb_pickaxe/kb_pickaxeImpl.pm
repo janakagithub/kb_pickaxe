@@ -262,7 +262,7 @@ sub runpickaxe
     open my $mcf, ">", "/kb/module/work/tmp/FBAModelCompounds.tsv"  or die "Couldn't open FBAModelCompounds file $!\n";
     open my $mcr, ">", "/kb/module/work/tmp/FBAModelReactions.tsv"  or die "Couldn't open FBAModelCompounds file $!\n";;;
 
-    print $mcf "id\tname\tformula\tcharge\taliases\tinchikey\smiles\n";
+    print $mcf "id\tname\tformula\tcharge\taliases\tinchikey\tsmiles\n";
     <$fhc>;
     while (my $input = <$fhc>){
         chomp $input;
