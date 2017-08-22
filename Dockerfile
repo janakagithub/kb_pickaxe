@@ -25,11 +25,14 @@ RUN conda install -y cairo \
                      pymongo \
                      rdkit
 
+# Catching means this layer may not get updated when the source does.
+# I'm making the pickaxe version explicit here for consistency.
 RUN cd /kb/dev_container/modules && \
    	mkdir Pickaxe && cd Pickaxe && \
     git clone https://github.com/JamesJeffryes/MINE-Database.git  && \
     cd MINE-Database && \
-    python3 setup.py install #cache break 08/17/17
+    git checkout 63f9449df4ad41623f134819e40c3dd54eb3ab82 && \
+    python3 setup.py install
 
 RUN echo '/kb/module/lib/kb_picaxe/ python3 setup.py install'
 

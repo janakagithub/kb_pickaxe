@@ -46,6 +46,11 @@ parameters :
            Pruning Compound Set
         short-hint : |
             Prune model output to only include reaction pathways terminating in a compound in this set
+    add_transport :
+        ui-name : |
+           Add Transport Reactions
+        short-hint : |
+            Add reactions to allow uptake of all starting compounds.
     out_model_id :
         ui-name : |
             Output Model Name
