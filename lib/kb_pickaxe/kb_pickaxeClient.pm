@@ -128,6 +128,8 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 	rule_set has a value which is a string
 	generations has a value which is an int
+	prune has a value which is a string
+	add_transport has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -152,6 +154,8 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 	rule_set has a value which is a string
 	generations has a value which is an int
+	prune has a value which is a string
+	add_transport has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -419,6 +423,8 @@ model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
+prune has a value which is a string
+add_transport has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -434,6 +440,8 @@ model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
+prune has a value which is a string
+add_transport has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 

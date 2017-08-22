@@ -14,12 +14,10 @@ RUN apt-get -y install nano
 ENV PATH /opt/conda/bin:$PATH
 ENV LANG C
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.3.11-Linux-x86_64.sh -O ~/miniconda.sh && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh
 
-RUN conda update conda
-RUN conda install python=3.5
 RUN conda config --add channels  https://conda.anaconda.org/rdkit
 RUN conda install -y cairo \
                      nomkl \
@@ -27,11 +25,13 @@ RUN conda install -y cairo \
                      pymongo \
                      rdkit
 
+# Catching means this layer may not get updated when the source does.
+# I'm making the pickaxe version explicit here for consistency.
 RUN cd /kb/dev_container/modules && \
    	mkdir Pickaxe && cd Pickaxe && \
     git clone https://github.com/JamesJeffryes/MINE-Database.git  && \
     cd MINE-Database && \
-
+    git checkout 63f9449df4ad41623f134819e40c3dd54eb3ab82 && \
     python3 setup.py install
 
 RUN echo '/kb/module/lib/kb_picaxe/ python3 setup.py install'

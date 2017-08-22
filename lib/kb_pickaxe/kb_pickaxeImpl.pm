@@ -2,10 +2,10 @@ package kb_pickaxe::kb_pickaxeImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org
-our $VERSION = '1.2.0';
-our $GIT_URL = 'https://github.com/janakagithub/kb_pickaxe.git';
-our $GIT_COMMIT_HASH = '63d0afbffb4bc2ded4cbb18ee0a49b82ad3e9340';
+# http://semver.org 
+our $VERSION = '1.3.0';
+our $GIT_URL = 'git@github.com:kbaseapps/kb_pickaxe.git';
+our $GIT_COMMIT_HASH = '0051b19e4cda0caf5f844bccf6d46e07f0b069b9';
 
 =head1 NAME
 
@@ -83,6 +83,8 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 	rule_set has a value which is a string
 	generations has a value which is an int
+	prune has a value which is a string
+	add_transport has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -107,6 +109,8 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	model_ref has a value which is a string
 	rule_set has a value which is a string
 	generations has a value which is an int
+	prune has a value which is a string
+	add_transport has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -146,6 +150,46 @@ sub runpickaxe
     my $ctx = $kb_pickaxe::kb_pickaxeServer::CallContext;
     my($return);
     #BEGIN runpickaxe
+    sub make_tsv_from_model {
+        my $cpdStHash = shift;
+        my $inputModelF = shift;
+        my $inputModel =  $inputModelF->{data}{modelcompounds};
+
+        open my $cpdListOut, ">", "/kb/module/work/tmp/inputModel.tsv"  or die "Couldn't open inputModel file $!\n";;;
+        print $cpdListOut "id\tabbreviation\tname\tformula\tmass\tsource\tstructure\tcharge is_core\tis_obsolete\tlinked_compound\tis_cofactor\tdeltag\tdeltagerr\tpka\tpkb\tabstract_compound\tcomprised_of\taliases\n";
+
+        print "accessing input model $inputModelF->{id}\t genome_ref $inputModelF->{genome_ref}\n";
+        print "Writing the compound input file for Pickaxe\n\n";
+
+        my $count =0;
+        for (my $i=0; $i<@{$inputModel}; $i++){
+
+            my @cpdId = split /_/, $inputModel->[$i]->{id};
+            my $formula = $inputModel->[$i]->{formula};
+            my $cpdName = $inputModel->[$i]->{name};
+
+            if (defined $cpdStHash->{$cpdId[0]}->[1]){
+            print $cpdListOut "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
+            #print  "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
+            $count++;
+            }
+
+        }
+        print "$count lines of compounds data will be prepaired for Pickaxe execution, continuing.....\n";
+
+        close $cpdListOut;
+    }
+    sub make_tsv_from_compoundset{
+        my $compoundset = shift;
+
+        print "Writeing Pickaxe input file from compound set";
+        open my $cpdListOut, ">", "/kb/module/work/tmp/inputModel.tsv"  or die "Couldn't open inputModel file $!\n";;;
+        print $cpdListOut "id\t\structure\n";
+        for (my $i=0; $i<@{$compoundset}; $i++){
+            print $cpdListOut "$compoundset->[$i]->{id}\t$compoundset->[$i]->{smiles}\n"
+        }
+
+    }
     my $fbaO = new fba_tools::fba_toolsClient( $self->{'callbackURL'},
                                                             ( 'service_version' => 'dev',
                                                               'async_version' => 'dev',
@@ -172,63 +216,47 @@ sub runpickaxe
 
         $cpdStHash->{$coId} = [$co->[$i]->{id},$co->[$i]->{structure},$co->[$i]->{formula},$co->[$i]->{name},$co->[$i]->{abbreviation},$co->[$i]->{charge}];
     }
-
     my $token=$ctx->token;
-    #my $wshandle=Bio::KBase::workspace::Client->new($self->{'workspace-url'},token=>$token);
     my $wshandle=Workspace::WorkspaceClient->new($self->{'workspace-url'},token=>$token);
 
-    open my $cpdListOut, ">", "/kb/module/work/tmp/inputModel.tsv"  or die "Couldn't open inputModel file $!\n";;;
-    print $cpdListOut "id\tabbreviation\tname\tformula\tmass\tsource\tstructure\tcharge is_core\tis_obsolete\tlinked_compound\tis_cofactor\tdeltag\tdeltagerr\tpka\tpkb\tabstract_compound\tcomprised_of\taliases\n";
+    print "loading $params->{model_id}\n";
+    my $inputModelF = $wshandle->get_objects([{workspace=>$params->{workspace},name=>$params->{model_id}}])->[0];
 
-
-    print "loading model $params->{model_id}\n";
-
-    #print "id\tabbreviation\tname\tformula\tmass\tsource\tstructure\tcharge is_core\tis_obsolete\tlinked_compound\tis_cofactor\tdeltag\tdeltagerr\tpka\tpkb\tabstract_compound\tcomprised_of\taliases\n";
-    my $inputModelF = $wshandle->get_objects([{workspace=>$params->{workspace},name=>$params->{model_id}}])->[0];#{data}{modelcompounds};
-    #my $inputModel = $wshandle->get_objects([{ref=>$params->{model_ref}}])->[0]{data}{modelcompounds};
-    my $inputModel =  $inputModelF->{data}{modelcompounds};
-
-    print "accessing input model $inputModelF->{id}\t genome_ref $inputModelF->{genome_ref}\n";
-    print "Writing the compound input file for Pickaxe\n\n";
-
-    my $count =0;
-    for (my $i=0; $i<@{$inputModel}; $i++){
-
-        my @cpdId = split /_/, $inputModel->[$i]->{id};
-        my $formula = $inputModel->[$i]->{formula};
-        my $cpdName = $inputModel->[$i]->{name};
-
-        if (defined $cpdStHash->{$cpdId[0]}->[1]){
-        print $cpdListOut "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
-        #print  "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
-        $count++;
-        }
-
+    if (index($inputModelF->{info}[2], 'KBaseFBA.FBAModel') != -1) {
+        make_tsv_from_model($cpdStHash, $inputModelF);
     }
-    print "$count lines of compounds data will be prepaired for Pickaxe execution, continuing.....\n";
-
-    close $cpdListOut;
+    else {
+        make_tsv_from_compoundset($inputModelF->{data}{compounds})
+    }
     print "$params->{generations} gen $params->{rule_set}\n";
-    print "Testing Pickaxe execution first....\n";
+    #print "Testing Pickaxe execution first....\n";
 
-    system ('python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -h');
+    #system ('python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -h');
     print "Now running Pickaxe\n";
 
     my $gen = $params->{generations};
+    my $command = "python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp";
 
     if ($params->{rule_set} eq 'spontaneous') {
         print "generating novel compounds based on spontanios reaction rules for $gen generations\n";
-        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        $command .= ' -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/ChemicalDamageReactionRules.tsv';
 
     } elsif ($params->{rule_set} eq 'enzymatic') {
         print "generating novel compounds based on enzymatic reaction rules for $gen generations\n";
-        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+        $command .= ' -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice';
 
     } else{
         die "Invalid reaction rule set or rule set not defined";
     }
 
-    #print &Dumper ($fm);
+    if ($params->{prune} eq 'model') {
+        $command .= ' -p /kb/module/work/tmp/inputModel.tsv';
+
+    } elsif ($params->{prune} eq 'biochemistry') {
+        $command .= ' -p /kb/module/data/Compounds.json';
+    }
+
+    system($command);
 
     open my $fhc, "<", "/kb/module/work/tmp/compounds.tsv" or die "Couldn't open compounds file $!\n";
     open my $fhr, "<", "/kb/module/work/tmp/reactions.tsv" or die "Couldn't open reactions file $!\n";
@@ -236,18 +264,18 @@ sub runpickaxe
     open my $mcf, ">", "/kb/module/work/tmp/FBAModelCompounds.tsv"  or die "Couldn't open FBAModelCompounds file $!\n";
     open my $mcr, ">", "/kb/module/work/tmp/FBAModelReactions.tsv"  or die "Couldn't open FBAModelCompounds file $!\n";;;
 
-    print $mcf "id\tname\tformula\tcharge\taliases\n";
+    print $mcf "id\tname\tformula\tcharge\taliases\tinchikey\tsmiles\n";
     <$fhc>;
     while (my $input = <$fhc>){
         chomp $input;
         my @cpdId = split /\t/, $input;
         if (defined $cpdStHash->{$cpdId[0]}){
 
-            print $mcf "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[3]\t$cpdStHash->{$cpdId[0]}->[2]\t$cpdStHash->{$cpdId[0]}->[5]\tnone\n"
+            print $mcf "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[3]\t$cpdStHash->{$cpdId[0]}->[2]\t$cpdStHash->{$cpdId[0]}->[5]\tnone\t$cpdId[3]\t$cpdId[4]\n"
         }
         else {
 
-            print $mcf "$cpdId[0]\t$cpdId[0]\tnone\t0\tnone\n";
+            print $mcf "$cpdId[0]\t$cpdId[0]\tnone\t0\tnone\t$cpdId[3]\t$cpdId[4]\n";
         }
 
 
@@ -260,8 +288,26 @@ sub runpickaxe
     while (my $input = <$fhr>){
         chomp $input;
         my @rxnId = split /\t/, $input;
-        #my $rxneq = s/=/-/g, $rxnId[2];
-        print $mcr "$rxnId[0]\t>\tc0\tnone\t$rxnId[0]\tnone\tnone\tnone\t$rxnId[2]\n";
+        print $mcr "$rxnId[0]\t>\tc0\tnone\t$rxnId[0]\tnone\tnone\t$rxnId[5]\t$rxnId[2]\n";
+    }
+
+    if ($params->{add_transport}){
+        print("Adding Transport reactions\n");
+        my @compounds;
+        if (exists $inputModelF->{data}{compounds}) {
+            @compounds = @{$inputModelF->{data}{compounds}};
+        } elsif (exists $inputModelF->{data}{modelcompounds}) {
+            @compounds = @{$inputModelF->{data}{modelcompounds}}
+        }
+        my %compound_set;
+        foreach my $compound (@compounds) {
+            my $cid = $compound->{id};
+            $cid = (split /_/, $cid)[0];
+            if (!exists $compound_set{$cid}) {
+                $compound_set{$cid}++;
+                print $mcr "$cid transporter\t>\tc0\tnone\t$cid transporter\tnone\tnone\tnone\t(1) $cid" . "_e0 => (1) $cid" . "_c0\n";
+            }
+        }
     }
 
     close $mcr;
@@ -311,7 +357,7 @@ sub runpickaxe
 
 
 
-=head2 status
+=head2 status 
 
   $return = $obj->status()
 
@@ -465,6 +511,8 @@ model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
+prune has a value which is a string
+add_transport has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -480,6 +528,8 @@ model_id has a value which is a kb_pickaxe.model_id
 model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
+prune has a value which is a string
+add_transport has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
