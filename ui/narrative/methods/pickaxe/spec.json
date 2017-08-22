@@ -107,6 +107,18 @@
             }
         },
         {
+          "id": "add_transport",
+          "optional":false,
+          "advanced":true,
+          "allow_multiple":false,
+          "default_values":[0],
+          "field_type" : "checkbox",
+          "checkbox_options":{
+            "checked_value": 1,
+            "unchecked_value": 0
+            }
+        },
+        {
             "id" : "out_model_id",
             "optional" : false,
             "advanced" : false,
@@ -144,6 +156,10 @@
                 {
                     "input_parameter": "prune",
                     "target_property": "prune"
+                },
+                {
+                    "input_parameter": "add_transport",
+                    "target_property": "add_transport"
                 },
                 {
                     "input_parameter": "out_model_id",

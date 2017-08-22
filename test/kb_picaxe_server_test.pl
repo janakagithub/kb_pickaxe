@@ -45,7 +45,7 @@ sub save_json_to_ws{
     }
     my $data = decode_json($Cjson);
     my $ret = $ws_client->save_objects({
-        workspace => get_ws_name(),
+        workspace => "jjeffryes:narrative_1501623862202",
         objects   => [ {
             type => $fileType,
             name => $data->{name},
@@ -54,28 +54,30 @@ sub save_json_to_ws{
     })->[0];
 };
 #=cut
-save_json_to_ws("/kb/module/test/iMR1_799.json", "KBaseFBA.FBAModel");
+#save_json_to_ws("/kb/module/test/iMR1_799.json", "KBaseFBA.FBAModel");
 save_json_to_ws("/kb/module/test/model_set.json", "KBaseBiochem.CompoundSet");
 print("Data loaded\n");
 eval {
     my $pickaxeParam = {
-        workspace => get_ws_name(),
+        workspace => "jjeffryes:narrative_1501623862202",#get_ws_name(),
         model_id => "iMR1_799",
         out_model_id => "spont_out",
         rule_set => "spontaneous",
         generations => 1,
-        prune=>'biochemistry',
+        prune => 'biochemistry',
+        add_transport => 1,
     };
     my $ret =$impl->runpickaxe($pickaxeParam);
 };
 eval {
     my $pickaxeParam2 = {
-        workspace => get_ws_name(),
+        workspace => "jjeffryes:narrative_1501623862202",#get_ws_name(),
         model_id => "model_set",
         out_model_id => "enz_out",
         rule_set => "enzymatic",
         generations => 1,
-        prune=>'model'
+        prune => 'model',
+        add_transport => 1,
     };
     my $ret2 =$impl->runpickaxe($pickaxeParam2);
 };

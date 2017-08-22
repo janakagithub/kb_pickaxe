@@ -3,9 +3,9 @@ use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
 # http://semver.org 
-our $VERSION = '1.2.0';
-our $GIT_URL = 'git@github.com:janakagithub/kb_pickaxe.git';
-our $GIT_COMMIT_HASH = '90973c72036009dc4ed7793c4a2b19acdc70673d';
+our $VERSION = '1.3.0';
+our $GIT_URL = 'git@github.com:kbaseapps/kb_pickaxe.git';
+our $GIT_COMMIT_HASH = '0051b19e4cda0caf5f844bccf6d46e07f0b069b9';
 
 =head1 NAME
 
@@ -84,6 +84,7 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	rule_set has a value which is a string
 	generations has a value which is an int
 	prune has a value which is a string
+	add_transport has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -109,6 +110,7 @@ RunPickAxe is a reference to a hash where the following keys are defined:
 	rule_set has a value which is a string
 	generations has a value which is an int
 	prune has a value which is a string
+	add_transport has a value which is an int
 	out_model_id has a value which is a kb_pickaxe.model_id
 	compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 workspace_name is a string
@@ -286,8 +288,26 @@ sub runpickaxe
     while (my $input = <$fhr>){
         chomp $input;
         my @rxnId = split /\t/, $input;
-        #my $rxneq = s/=/-/g, $rxnId[2];
         print $mcr "$rxnId[0]\t>\tc0\tnone\t$rxnId[0]\tnone\tnone\t$rxnId[5]\t$rxnId[2]\n";
+    }
+
+    if ($params->{add_transport}){
+        print("Adding Transport reactions\n");
+        my @compounds;
+        if (exists $inputModelF->{data}{compounds}) {
+            @compounds = @{$inputModelF->{data}{compounds}};
+        } elsif (exists $inputModelF->{data}{modelcompounds}) {
+            @compounds = @{$inputModelF->{data}{modelcompounds}}
+        }
+        my %compound_set;
+        foreach my $compound (@compounds) {
+            my $cid = $compound->{id};
+            $cid = (split /_/, $cid)[0];
+            if (!exists $compound_set{$cid}) {
+                $compound_set{$cid}++;
+                print $mcr "$cid transporter\t>\tc0\tnone\t$cid transporter\tnone\tnone\tnone\t(1) $cid" . "_e0 => (1) $cid" . "_c0\n";
+            }
+        }
     }
 
     close $mcr;
@@ -492,6 +512,7 @@ model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
 prune has a value which is a string
+add_transport has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
@@ -508,6 +529,7 @@ model_ref has a value which is a string
 rule_set has a value which is a string
 generations has a value which is an int
 prune has a value which is a string
+add_transport has a value which is an int
 out_model_id has a value which is a kb_pickaxe.model_id
 compounds has a value which is a reference to a list where each element is a kb_pickaxe.EachCompound
 
