@@ -170,7 +170,6 @@ sub runpickaxe
 
             if (defined $cpdStHash->{$cpdId[0]}->[1]){
             print $cpdListOut "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
-            #print  "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
             $count++;
             }
 
@@ -191,10 +190,8 @@ sub runpickaxe
 
     }
     my $fbaO = new fba_tools::fba_toolsClient( $self->{'callbackURL'},
-                                                            ( 'service_version' => 'dev',
-                                                              'async_version' => 'dev',
-                                                            )
-                                                           );
+        ('service_version' => 'beta', 'async_version' => 'beta',)
+    );
     my $Cjson;
     {
         local $/; #Enable 'slurp' mode
@@ -269,13 +266,13 @@ sub runpickaxe
     while (my $input = <$fhc>){
         chomp $input;
         my @cpdId = split /\t/, $input;
+        # KBase doesn't use charges in formulas so strip these
+        $cpdId[3] =~ s/(\+|-)\d*$//;
         if (defined $cpdStHash->{$cpdId[0]}){
-
-            print $mcf "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[3]\t$cpdStHash->{$cpdId[0]}->[2]\t$cpdStHash->{$cpdId[0]}->[5]\tnone\t$cpdId[3]\t$cpdId[4]\n"
+            print $mcf "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[3]\t$cpdStHash->{$cpdId[0]}->[2]\t$cpdStHash->{$cpdId[0]}->[5]\tnone\t$cpdId[5]\t$cpdId[6]\n"
         }
         else {
-
-            print $mcf "$cpdId[0]\t$cpdId[0]\tnone\t0\tnone\t$cpdId[3]\t$cpdId[4]\n";
+            print $mcf "$cpdId[0]\t$cpdId[0]\t$cpdId[3]\t$cpdId[4]\tnone\t$cpdId[5]\t$cpdId[6]\n";
         }
 
 

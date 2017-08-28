@@ -55,7 +55,7 @@ sub save_json_to_ws{
 };
 #=cut
 #save_json_to_ws("/kb/module/test/iMR1_799.json", "KBaseFBA.FBAModel");
-save_json_to_ws("/kb/module/test/model_set.json", "KBaseBiochem.CompoundSet");
+#save_json_to_ws("/kb/module/test/model_set.json", "KBaseBiochem.CompoundSet");
 print("Data loaded\n");
 eval {
     my $pickaxeParam = {
