@@ -2,6 +2,7 @@ use strict;
 use JSON;
 use Data::Dumper;
 use Test::More;
+use Test::Exception;
 use Config::Simple;
 use Time::HiRes qw(time);
 use Bio::KBase::AuthToken;
@@ -54,11 +55,11 @@ sub save_json_to_ws{
     })->[0];
 };
 #=cut
-#save_json_to_ws("/kb/module/test/iMR1_799.json", "KBaseFBA.FBAModel");
+save_json_to_ws("/kb/module/test/iMR1_799.json", "KBaseFBA.FBAModel");
 save_json_to_ws("/kb/module/test/model_set.json", "KBaseBiochem.CompoundSet");
 print("Data loaded\n");
-eval {
-    my $pickaxeParam = {
+lives_ok{
+    $impl->runpickaxe( {
         workspace => "jjeffryes:narrative_1501623862202",#get_ws_name(),
         model_id => "iMR1_799",
         out_model_id => "spont_out",
@@ -66,39 +67,30 @@ eval {
         generations => 1,
         prune => 'biochemistry',
         add_transport => 1,
-    };
-    my $ret =$impl->runpickaxe($pickaxeParam);
+    })
 };
-eval {
-    my $pickaxeParam2 = {
+lives_ok{
+    $impl->runpickaxe( {
         workspace => "jjeffryes:narrative_1501623862202",#get_ws_name(),
         model_id => "model_set",
         out_model_id => "enz_out",
         rule_set => "enzymatic",
         generations => 1,
         prune => 'model',
-        add_transport => 1,
-    };
-    my $ret2 =$impl->runpickaxe($pickaxeParam2);
+        add_transport => 0,
+    })
 };
 my $err = undef;
 if ($@) {
     $err = $@;
 }
+done_testing();
 eval {
     if (defined($ws_name)) {
         $ws_client->delete_workspace({workspace => $ws_name});
         print("Test workspace was deleted\n");
     }
 };
-if (defined($err)) {
-    if(ref($err) eq "Bio::KBase::Exceptions::KBaseException") {
-        die("Error while running tests: " . $err->trace->as_string);
-    } else {
-        die $err;
-    }
-}
-
 {
     package LocalCallContext;
     use strict;
