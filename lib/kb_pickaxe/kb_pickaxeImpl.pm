@@ -151,25 +151,22 @@ sub runpickaxe
     my($return);
     #BEGIN runpickaxe
     sub make_tsv_from_model {
+        my $co = shift;
         my $cpdStHash = shift;
         my $inputModelF = shift;
         my $inputModel =  $inputModelF->{data}{modelcompounds};
 
         open my $cpdListOut, ">", "/kb/module/work/tmp/inputModel.tsv"  or die "Couldn't open inputModel file $!\n";;;
-        print $cpdListOut "id\tabbreviation\tname\tformula\tmass\tsource\tstructure\tcharge is_core\tis_obsolete\tlinked_compound\tis_cofactor\tdeltag\tdeltagerr\tpka\tpkb\tabstract_compound\tcomprised_of\taliases\n";
+        print $cpdListOut "id\t\structure\n";
 
         print "accessing input model $inputModelF->{id}\t genome_ref $inputModelF->{genome_ref}\n";
         print "Writing the compound input file for Pickaxe\n\n";
 
         my $count =0;
         for (my $i=0; $i<@{$inputModel}; $i++){
-
             my @cpdId = split /_/, $inputModel->[$i]->{id};
-            my $formula = $inputModel->[$i]->{formula};
-            my $cpdName = $inputModel->[$i]->{name};
-
-            if (defined $cpdStHash->{$cpdId[0]}->[1]){
-            print $cpdListOut "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[4]\t$inputModel->[$i]->{name}\t $inputModel->[$i]->{formula}\t000\tModelSEED\t$cpdStHash->{$cpdId[0]}->[1]\n";
+            if (defined $cpdStHash->{$cpdId[0]}){
+                print $cpdListOut "$cpdId[0]\t$co->[$cpdStHash->{$cpdId[0]}]->{structure}\n";
             $count++;
             }
 
@@ -180,8 +177,7 @@ sub runpickaxe
     }
     sub make_tsv_from_compoundset{
         my $compoundset = shift;
-
-        print "Writeing Pickaxe input file from compound set";
+        print "Writeing Pickaxe input file from compound set\n";
         open my $cpdListOut, ">", "/kb/module/work/tmp/inputModel.tsv"  or die "Couldn't open inputModel file $!\n";;;
         print $cpdListOut "id\t\structure\n";
         for (my $i=0; $i<@{$compoundset}; $i++){
@@ -202,16 +198,13 @@ sub runpickaxe
 
     my $co = decode_json($Cjson);
     my $cpdStHash;
+    my $inchikeyHash;
     for (my $i=0; $i< @{$co}; $i++){
-
-        my $coId = $co->[$i]->{id};
-        my $coStruc = $co->[$i]->{structure};
-        my $coFormula = $co->[$i]->{formula};
-        my $coName = $co->[$i]->{name};
-        my $coAbbr = $co->[$i]->{abbreviation};
-        my $coCharge =$co->[$i]->{charge};
-
-        $cpdStHash->{$coId} = [$co->[$i]->{id},$co->[$i]->{structure},$co->[$i]->{formula},$co->[$i]->{name},$co->[$i]->{abbreviation},$co->[$i]->{charge}];
+        my $coInchikey = $co->[$i]->{inchikey};
+        $cpdStHash->{$co->[$i]->{id}} = $i;
+        if ($coInchikey){
+            $inchikeyHash->{$coInchikey} = $i
+        }
     }
     my $token=$ctx->token;
     my $wshandle=Workspace::WorkspaceClient->new($self->{'workspace-url'},token=>$token);
@@ -220,7 +213,7 @@ sub runpickaxe
     my $inputModelF = $wshandle->get_objects([{workspace=>$params->{workspace},name=>$params->{model_id}}])->[0];
 
     if (index($inputModelF->{info}[2], 'KBaseFBA.FBAModel') != -1) {
-        make_tsv_from_model($cpdStHash, $inputModelF);
+        make_tsv_from_model($co, $cpdStHash, $inputModelF);
     }
     else {
         make_tsv_from_compoundset($inputModelF->{data}{compounds})
@@ -269,13 +262,14 @@ sub runpickaxe
         # KBase doesn't use charges in formulas so strip these
         $cpdId[3] =~ s/(\+|-)\d*$//;
         if (defined $cpdStHash->{$cpdId[0]}){
-            print $mcf "$cpdId[0]\t$cpdStHash->{$cpdId[0]}->[3]\t$cpdStHash->{$cpdId[0]}->[2]\t$cpdStHash->{$cpdId[0]}->[5]\tnone\t$cpdId[5]\t$cpdId[6]\n"
-        }
-        else {
+            my $seedcmp = $co->[$cpdStHash->{$cpdId[0]}];
+            print $mcf "$cpdId[0]\t$seedcmp->{name}\t$seedcmp->{formula}\t$seedcmp->{charge}\tnone\t$cpdId[5]\t$cpdId[6]\n";
+        } elsif (defined $inchikeyHash->{$cpdId[5]}){
+            my $seedcmp = $co->[$inchikeyHash->{$cpdId[5]}];
+            print $mcf "$cpdId[0]\t$seedcmp->{name}\t$seedcmp->{formula}\t$seedcmp->{charge}\tnone\t$cpdId[5]\t$cpdId[6]\n";
+        } else {
             print $mcf "$cpdId[0]\t$cpdId[0]\t$cpdId[3]\t$cpdId[4]\tnone\t$cpdId[5]\t$cpdId[6]\n";
         }
-
-
     }
     close $mcf;
     close $fhc;
