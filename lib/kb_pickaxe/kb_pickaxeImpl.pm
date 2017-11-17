@@ -165,9 +165,18 @@ sub runpickaxe
         my $count =0;
         for (my $i=0; $i<@{$inputModel}; $i++){
             my @cpdId = split /_/, $inputModel->[$i]->{id};
-            if (defined $cpdStHash->{$cpdId[0]}){
+            my $altID = $inputModel->[$i]->{dblinks}->{'ModelSeed'}[0];
+            if (defined $inputModel->[$i]->{smiles}){
+                print $cpdListOut "$inputModel->[$i]->{id}\t$inputModel->[$i]->{smiles}\n";
+                $count++;
+            }
+            elsif (defined $cpdStHash->{$cpdId[0]}){
                 print $cpdListOut "$cpdId[0]\t$co->[$cpdStHash->{$cpdId[0]}]->{structure}\n";
-            $count++;
+                $count++;
+            }
+            elsif (defined $cpdStHash->{$altID}){
+                print $cpdListOut "$altID\t$co->[$cpdStHash->{$altID}]->{structure}\n";
+                $count++;
             }
 
         }
@@ -258,20 +267,19 @@ sub runpickaxe
     <$fhc>;
     while (my $input = <$fhc>){
         chomp $input;
-        my @cpdId = split /\t/, $input;
+        my @cpdData = split /\t/, $input;
         # KBase doesn't use charges in formulas so strip these
-        $cpdId[3] =~ s/(\+|-)\d*$//;
-        if (defined $cpdStHash->{$cpdId[0]}){
-            my $seedcmp = $co->[$cpdStHash->{$cpdId[0]}];
-            print $mcf "$cpdId[0]\t$seedcmp->{name}\t$seedcmp->{formula}\t$seedcmp->{charge}\tnone\t$cpdId[5]\t$cpdId[6]\n";
-        } elsif (defined $inchikeyHash->{$cpdId[5]}){
-            my $seedcmp = $co->[$inchikeyHash->{$cpdId[5]}];
-            print $mcf "$cpdId[0]\t$seedcmp->{name}\t$seedcmp->{formula}\t$seedcmp->{charge}\tnone\t$cpdId[5]\t$cpdId[6]\n";
+        $cpdData[3] =~ s/(\+|-)\d*$//;
+        if (defined $cpdStHash->{$cpdData[0]}){
+            my $seedcmp = $co->[$cpdStHash->{$cpdData[0]}];
+            print $mcf "$cpdData[0]_c0\t$seedcmp->{name}\t$seedcmp->{formula}\t$seedcmp->{charge}\tnone\t$cpdData[5]\t$cpdData[6]\n";
+        } elsif (defined $inchikeyHash->{$cpdData[5]}){
+            my $seedcmp = $co->[$inchikeyHash->{$cpdData[5]}];
+            print $mcf "$cpdData[0]_c0\t$seedcmp->{name}\t$seedcmp->{formula}\t$seedcmp->{charge}\tnone\t$cpdData[5]\t$cpdData[6]\n";
         } else {
-            print $mcf "$cpdId[0]\t$cpdId[0]\t$cpdId[3]\t$cpdId[4]\tnone\t$cpdId[5]\t$cpdId[6]\n";
+            print $mcf "$cpdData[0]_c0\t$cpdData[0]\t$cpdData[3]\t$cpdData[4]\tnone\t$cpdData[5]\t$cpdData[6]\n";
         }
     }
-    close $mcf;
     close $fhc;
 
     print $mcr "id\tdirection\tcompartment\tgpr\tname\tenzyme\tpathway\treference\tequation\n";
@@ -296,12 +304,14 @@ sub runpickaxe
             $cid = (split /_/, $cid)[0];
             if (!exists $compound_set{$cid}) {
                 $compound_set{$cid}++;
+                print $mcf $cid."_e0\tnone\tnone\tnone\tnone\tnone\tnone\n";
                 print $mcr "$cid transporter\t>\tc0\tnone\t$cid transporter\tnone\tnone\tnone\t(1) $cid" . "_e0 => (1) $cid" . "_c0\n";
             }
         }
     }
 
     close $mcr;
+    close $mcf;
     close $fhr;
 
     my $rxnFile = {
