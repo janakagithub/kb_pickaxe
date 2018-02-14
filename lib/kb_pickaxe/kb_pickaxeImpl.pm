@@ -26,7 +26,6 @@ use Config::IniFiles;
 use Data::Dumper;
 use JSON;
 use fba_tools::fba_toolsClient;
-use FBAFileUtil::FBAFileUtilClient;
 
 #END_HEADER
 
@@ -304,7 +303,8 @@ sub runpickaxe
             $cid = (split /_/, $cid)[0];
             if (!exists $compound_set{$cid}) {
                 $compound_set{$cid}++;
-                print $mcf $cid."_e0\tnone\tnone\tnone\tnone\tnone\tnone\n";
+                print $mcf $cid."_c0\tnone\tnone\t0\tnone\tnone\tnone\n";
+                print $mcf $cid."_e0\tnone\tnone\t0\tnone\tnone\tnone\n";
                 print $mcr "$cid transporter\t>\tc0\tnone\t$cid transporter\tnone\tnone\tnone\t(1) $cid" . "_e0 => (1) $cid" . "_c0\n";
             }
         }
