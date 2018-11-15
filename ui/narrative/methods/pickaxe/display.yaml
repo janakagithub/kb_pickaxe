@@ -28,9 +28,9 @@ suggestions:
 parameters :
     model_id :
         ui-name : |
-            Input Model Name
+            Compound Source
         short-hint : |
-            Model with source compounds
+            FBAModel or CompoundSet with source compounds
     rule_set :
         ui-name : |
             Reaction rule set
@@ -41,6 +41,16 @@ parameters :
             Number of generations
         short-hint : |
             The nuber of times reaction rules will be applied to the compounds
+    prune :
+        ui-name : |
+           Pruning Compound Set
+        short-hint : |
+            Prune model output to only include reaction pathways terminating in a compound in this set
+    add_transport :
+        ui-name : |
+           Add Transport Reactions
+        short-hint : |
+            Add reactions to allow uptake of all starting compounds.
     out_model_id :
         ui-name : |
             Output Model Name
