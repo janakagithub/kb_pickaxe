@@ -42,6 +42,12 @@
                         "display": "Spontaneous Rules",
                         "id": "spont",
                         "ui_name": "Spontaneous Rules"
+                    },
+                    {
+                        "value": "retro_rules_2",
+                        "display": "Retro Rules 2",
+                        "id": "retro_rules_2",
+                        "ui_name": "Retro Rules 2"
                     }
                 ]
             }

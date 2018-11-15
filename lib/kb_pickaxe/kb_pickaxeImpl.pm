@@ -224,7 +224,10 @@ sub runpickaxe
         print "generating novel compounds based on enzymatic reaction rules for $gen generations\n";
         system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
 
-    } else{
+    } elsif ($params->{rule_set} eq 'retro_rules_2') {
+        print "generating novel compounds based on retro_rules_2 reaction rules for $gen generations\n";
+        system ("python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -C /kb/module/data/EnzymaticCoreactants.tsv -r /kb/module/data/retro_rules_2.tsv --bnice -q -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp");
+    } else {
         die "Invalid reaction rule set or rule set not defined";
     }
 
