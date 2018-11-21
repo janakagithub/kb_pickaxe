@@ -44,45 +44,45 @@
                         "ui_name": "Spontaneous Rules"
                     },
                     {
-                        "value": "retro_rules_2",
+                        "value": "retro_rules_dia2",
                         "display": "RetroRules Diameter 2",
-                        "id": "retro_rules_2",
+                        "id": "retro_rules_dia2",
                         "ui_name": "RetroRules Diameter 2"
                     },
                     {
-                        "value": "retro_rules_4",
+                        "value": "retro_rules_dia4",
                         "display": "RetroRules Diameter 4",
-                        "id": "retro_rules_4",
+                        "id": "retro_rules_dia4",
                         "ui_name": "RetroRules Diameter 4"
                     },
                     {
-                        "value": "retro_rules_6",
+                        "value": "retro_rules_dia6",
                         "display": "RetroRules Diameter 6",
-                        "id": "retro_rules_6",
+                        "id": "retro_rules_dia6",
                         "ui_name": "RetroRules Diameter 6"
                     },
                     {
-                        "value": "retro_rules_8",
+                        "value": "retro_rules_dia8",
                         "display": "RetroRules Diameter 8",
-                        "id": "retro_rules_8",
+                        "id": "retro_rules_dia8",
                         "ui_name": "RetroRules Diameter 8"
                     },
                     {
-                        "value": "retro_rules_10",
+                        "value": "retro_rules_dia10",
                         "display": "RetroRules Diameter 10",
-                        "id": "retro_rules_10",
+                        "id": "retro_rules_dia10",
                         "ui_name": "RetroRules Diameter 10"
                     },
                     {
-                        "value": "retro_rules_12",
+                        "value": "retro_rules_dia12",
                         "display": "RetroRules Diameter 12",
-                        "id": "retro_rules_12",
+                        "id": "retro_rules_dia12",
                         "ui_name": "RetroRules Diameter 12"
                     },
                     {
-                        "value": "retro_rules_16",
+                        "value": "retro_rules_dia16",
                         "display": "RetroRules Diameter 16",
-                        "id": "retro_rules_16",
+                        "id": "retro_rules_dia16",
                         "ui_name": "RetroRules Diameter 16"
                     }
                 ]

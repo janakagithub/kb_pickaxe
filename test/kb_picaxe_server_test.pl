@@ -87,19 +87,20 @@ lives_ok{
         workspace => "jjeffryes:narrative_1501623862202",#get_ws_name(),
         model_id => "iMR1_799",
         out_model_id => "retro_out",
-        rule_set => "retro_rules_2",
+        rule_set => "retro_rules_dia2",
         generations => 1,
         prune => 'model',
         add_transport => 1,
     })
 };
+
 =head
 lives_ok{
     $impl->runpickaxe( {
         workspace => "janakakbase:narrative_1498509337193",#get_ws_name(),
-        model_id => "BsubModel",
+        model_id => "model_set",
         out_model_id => "retro_out",
-        rule_set => "seedCompounds_retro_rules_dia2",
+        rule_set => "retro_rules_dia2",
         generations => 1,
         prune => 'model',
         add_transport => 1,
