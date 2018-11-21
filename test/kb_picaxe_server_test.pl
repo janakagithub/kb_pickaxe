@@ -46,18 +46,20 @@ sub save_json_to_ws{
     }
     my $data = decode_json($Cjson);
     my $ret = $ws_client->save_objects({
-        workspace => "jjeffryes:narrative_1501623862202",
+        workspace => "jjeffryes:narrative_1501623862202", #"janakakbase:narrative_1498509337193"
         objects   => [ {
             type => $fileType,
             name => $data->{name},
             data => $data
         } ]
     })->[0];
+
 };
 #=cut
 save_json_to_ws("/kb/module/test/iMR1_799.json", "KBaseFBA.FBAModel");
 save_json_to_ws("/kb/module/test/model_set.json", "KBaseBiochem.CompoundSet");
 print("Data loaded\n");
+
 lives_ok{
     $impl->runpickaxe( {
         workspace => "jjeffryes:narrative_1501623862202",#get_ws_name(),
@@ -80,6 +82,30 @@ lives_ok{
         add_transport => 0,
     })
 };
+lives_ok{
+    $impl->runpickaxe( {
+        workspace => "jjeffryes:narrative_1501623862202",#get_ws_name(),
+        model_id => "iMR1_799",
+        out_model_id => "retro_out",
+        rule_set => "retro_rules_2",
+        generations => 1,
+        prune => 'model',
+        add_transport => 1,
+    })
+};
+=head
+lives_ok{
+    $impl->runpickaxe( {
+        workspace => "janakakbase:narrative_1498509337193",#get_ws_name(),
+        model_id => "BsubModel",
+        out_model_id => "retro_out",
+        rule_set => "seedCompounds_retro_rules_dia2",
+        generations => 1,
+        prune => 'model',
+        add_transport => 1,
+    })
+};
+=cut
 my $err = undef;
 if ($@) {
     $err = $@;

@@ -2,7 +2,7 @@ package kb_pickaxe::kb_pickaxeImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org 
+# http://semver.org
 our $VERSION = '1.3.0';
 our $GIT_URL = 'git@github.com:kbaseapps/kb_pickaxe.git';
 our $GIT_COMMIT_HASH = '0051b19e4cda0caf5f844bccf6d46e07f0b069b9';
@@ -234,6 +234,8 @@ sub runpickaxe
 
     my $gen = $params->{generations};
     my $command = "python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp";
+    my $coreactant_path = "/kb/module/data/NoCoreactants.tsv";
+    my $retro_rule_path = "/kb/module/data/".$params->{rule_set}.".tsv --bnice -q";
 
     if ($params->{rule_set} eq 'spontaneous') {
         print "generating novel compounds based on spontanios reaction rules for $gen generations\n";
@@ -243,7 +245,11 @@ sub runpickaxe
         print "generating novel compounds based on enzymatic reaction rules for $gen generations\n";
         $command .= ' -C /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticCoreactants.tsv -r /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/data/EnzymaticReactionRules.tsv --bnice';
 
-    } else{
+    } elsif ($params->{rule_set} =~ /retro_rules/) {
+        print "generating novel compounds based on $params->{rule_set} reaction rules for $gen generations\n";
+        $command .= " -C $coreactant_path -r $retro_rule_path";
+
+    } else {
         die "Invalid reaction rule set or rule set not defined";
     }
 
@@ -254,7 +260,11 @@ sub runpickaxe
         $command .= ' -p /kb/module/data/Compounds.json';
     }
 
+    print "\n\n".$command;
+
+
     system($command);
+
 
     open my $fhc, "<", "/kb/module/work/tmp/compounds.tsv" or die "Couldn't open compounds file $!\n";
     open my $fhr, "<", "/kb/module/work/tmp/reactions.tsv" or die "Couldn't open reactions file $!\n";
@@ -358,7 +368,7 @@ sub runpickaxe
 
 
 
-=head2 status 
+=head2 status
 
   $return = $obj->status()
 
