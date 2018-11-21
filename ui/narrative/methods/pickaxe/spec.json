@@ -45,9 +45,45 @@
                     },
                     {
                         "value": "retro_rules_2",
-                        "display": "Retro Rules 2",
+                        "display": "RetroRules Diameter 2",
                         "id": "retro_rules_2",
-                        "ui_name": "Retro Rules 2"
+                        "ui_name": "RetroRules Diameter 2"
+                    },
+                    {
+                        "value": "retro_rules_4",
+                        "display": "RetroRules Diameter 4",
+                        "id": "retro_rules_4",
+                        "ui_name": "RetroRules Diameter 4"
+                    },
+                    {
+                        "value": "retro_rules_6",
+                        "display": "RetroRules Diameter 6",
+                        "id": "retro_rules_6",
+                        "ui_name": "RetroRules Diameter 6"
+                    },
+                    {
+                        "value": "retro_rules_8",
+                        "display": "RetroRules Diameter 8",
+                        "id": "retro_rules_8",
+                        "ui_name": "RetroRules Diameter 8"
+                    },
+                    {
+                        "value": "retro_rules_10",
+                        "display": "RetroRules Diameter 10",
+                        "id": "retro_rules_10",
+                        "ui_name": "RetroRules Diameter 10"
+                    },
+                    {
+                        "value": "retro_rules_12",
+                        "display": "RetroRules Diameter 12",
+                        "id": "retro_rules_12",
+                        "ui_name": "RetroRules Diameter 12"
+                    },
+                    {
+                        "value": "retro_rules_16",
+                        "display": "RetroRules Diameter 16",
+                        "id": "retro_rules_16",
+                        "ui_name": "RetroRules Diameter 16"
                     }
                 ]
             }
