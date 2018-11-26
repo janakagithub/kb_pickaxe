@@ -235,7 +235,7 @@ sub runpickaxe
     my $gen = $params->{generations};
     my $command = "python3 /kb/dev_container/modules/Pickaxe/MINE-Database/minedatabase/pickaxe.py -g $gen -c /kb/module/work/tmp/inputModel.tsv -o /kb/module/work/tmp";
     my $coreactant_path = "/kb/module/data/NoCoreactants.tsv";
-    my $retro_rule_path = "/kb/module/data/".$params->{rule_set}.".tsv --bnice -q";
+    my $retro_rule_path = "/kb/module/data/".$params->{rule_set}.".tsv --bnice -q -m 4";
 
     if ($params->{rule_set} eq 'spontaneous') {
         print "generating novel compounds based on spontanios reaction rules for $gen generations\n";
@@ -259,9 +259,6 @@ sub runpickaxe
     } elsif ($params->{prune} eq 'biochemistry') {
         $command .= ' -p /kb/module/data/Compounds.json';
     }
-
-    print "\n\n".$command;
-
 
     system($command);
 
